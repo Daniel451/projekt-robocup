@@ -93,6 +93,38 @@ Avoid the passive voice: Y was done by X, use the active voice: X did Y
 \subsection{Vision}
 \subsection{Filtering}
 \subsection{Localisation}
+\subsubsection{Calculating the position of a robot}
+We didn't have a lot of data to work with. The only data that we could use were the distances to the goal and to the goalposts. There is a lot of other data: like already mentioned the distance to obstacles or other players on the field and the distance to the ball. But the problem with those is that they are not a fixed point on the field. They will change their position and that means they are not suitable to calculate our own position. Or more accurately the distance in front and the distance to the left which depends on the direction of the robot. We will call the distance in front of him u and to the left of him v to stay consistent with the terms used in the code. The following graphic shows what these values are:\\
+insert graphic of U and V values\\
+With these values it's easy to calculate the direct distance to the goal. You can use Pythagora's theorem to do that: \(d = \sqrt{u^2+v^2}\)\\
+We do that for both goal posts. The size of the field and the goal are known beforehand, so we can use the width of the goal as well. With these three values we can build a triangle:\\
+triangle graphic\\
+With the help of that triangle we are going to calculate the point of intersection of d1 and d2. Let's assume that we have a coordinate system and the point of origin is at the middle of the field. The reason for that is that the origin of our grid world, that is used to save the data, is in the middle of the field too. That means it's easier to translate the position found in that coordinate system to the grid world. But we will explain that in the next section. Otherwise it would have been easier to have the origin in the middle of the goal the robot is facing to. To calculate the point of intersection we need to know the slope of both lines. We can use the angles in the triangle for this purpose:\\
+Vielleicht Grafik\\
+The formula we used is the following: \(\arccos{(\frac{a^2-b^2-c^2}{-2bc})} = \alpha\)\\ Specifically these are the two formulas if you want to calculate the angle from the left post and the right post in the triangle:\\ 
+\(angleleft = \arccos{\frac{(d1^2 - d2^2 - goalwidth^2)}{(-2*d2*goalwidth)}}\)\\
+\(angleright = \arccos{\frac{(d2^2 - d1^2 - goalwidth^2)}{(-2*d1*goalwidth)}}\)\\
+Now we know the two angles in the triangle. To convert the angles to the slopes in the coordinate system we can do the following:\\
+\(slopeleft = \frac{1}{\tan{angleleft}}\)\\
+On the right side we don't need the angle itself but 180 minus the angle:
+\(sloperight = \frac{1}{\tan{180 - angleright}}\)\\
+Because we want to know the point of intersection of these two lines we need an equation for them:\\
+\(y = slopeleft * x + b1\)\\
+\(y = sloperight * x + b2\)\\
+
+\subsubsection{Grid World}
+Now that we know where our own robot stands we need some way to share the position, so that our team mates can use that knowledge and every robot in our team can profit. For that purpose we use the grid world. We needed a representation of the field, so we could safe and use the data we generated. There are different approaches for that. Other approaches that we considered were a coordinate system that uses millimetres and tree based solution. In the end we decided to use said grid world. For that we divided the field in certain number of cells. The origin of those cells is in the middle of the field:\\
+grid world grafik\\
+We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of the own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for the opponents goal too, it is easier to have the origin cell in the middle. There is also a difference between choosing an even number and uneven number respectively on the x and the y direction. We decided to choose an uneven number for both, which means the origin cell is now in the middle of the centre spot. One benefit of that is that there is a cell that is in the middle of the goal where the goalie can stand. When we take the cell at position (0,0) for example and we compare it to a coordinate system, then the upper right edge of that cell would be at (0.5, 0.5) in the coordinate system. When we calculate positions we don't get integers but decimal digits. So if it is over 0.5 instead of the cell with the 0 position we will put it in the cell with the position 1. 
+For that purpose we used a dictionary in python. We used numbers to fill that dictionary. At initialization the dictionary will be filled with zeroes, which is representing that there is nothing at that particular position. Here is a quick overview of the numbers we fill the dictionary with and what they represent:\\
+0: nothing\\
+1: own goal\\
+2: enemy goal\\
+3: own position\\
+4: team mate\\
+5: opponent\\
+6: unclassified obstacle\\
+Every robot can determine their own position themselves. The position of the team mates is shared over the wifi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team mates the robots can compare the position of the robots they see with the position of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. Another problem is to keep the map up-to-date. We send the whole map over the wifi, so it would be possible to check if there still is a robot on a certain position when the robot looks in that direction. Another solution would be to delete the positions of the opponents after a certain amount of time. There is the same problem with team mates. Currently we don't send which team mate shares the position, but that would be one solution. Whenever a team mate shares their new position a the receiving robot could delete the old position.\\
 \subsection{Communication}
 \section{Results}
 Present your results in a logical sequence
