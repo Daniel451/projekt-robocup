@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.2.21)  21 FEB 2015 23:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.2.21)  22 FEB 2015 00:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -274,23 +274,27 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] <dbscan1.pdf, id=15, 4
-73.77pt x 307.1475pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+Underfull \hbox (badness 10000) in paragraph at lines 178--199
+
+ []
+
+<dbscan1.pdf, id=15, 473.77pt x 307.1475pt>
 File: dbscan1.pdf Graphic file (type pdf)
 <use dbscan1.pdf>
-Package pdftex.def Info: dbscan1.pdf used on input line 200.
+Package pdftex.def Info: dbscan1.pdf used on input line 201.
 (pdftex.def)             Requested size: 242.98541pt x 157.52893pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 220--237
+Underfull \hbox (badness 10000) in paragraph at lines 223--240
 
  []
 
-[3 </home/daniel/repositories/projekt-robocup/obstacle/dbscan1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 248--260
+[3] [4 </home/daniel/repositories/projekt-robocup/obstacle/dbscan1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 251--263
 
  []
 
-[4] [5]
+[5]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
@@ -298,7 +302,7 @@ Missing character: There is no ™ in font cmr10!
 Here is how much of TeX's memory you used:
  2579 strings out of 493105
  34819 string characters out of 6137072
- 118214 words of memory out of 5000000
+ 116213 words of memory out of 5000000
  6021 multiletter control sequences out of 15000+600000
  7802 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -317,7 +321,7 @@ cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
 Output written on /home/daniel/repositories/projekt-robocup/obstacle/obstacle.p
-df (7 pages, 545613 bytes).
+df (7 pages, 546894 bytes).
 PDF statistics:
  147 PDF objects out of 1000 (max. 8388607)
  98 compressed objects within 1 object stream
