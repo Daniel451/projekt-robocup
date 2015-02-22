@@ -1,16 +1,16 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.2.21)  22 FEB 2015 00:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.2.21)  22 FEB 2015 22:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**/home/daniel/repositories/projekt-robocup/obstacle/obstacle.tex
-(/home/daniel/repositories/projekt-robocup/obstacle/obstacle.tex
+**obstacle.tex
+(./obstacle.tex
 LaTeX2e <2014/05/01>
 Babel <3.9l> and hyphenation patterns for 79 languages loaded.
-(/home/daniel/repositories/projekt-robocup/obstacle/svmultln.cls
+(./svmultln.cls
 Document Class: svmultln 2007/08/08 v3.27 
 Springer Verlag global LaTeX document class for lecture notes and contributed b
 ooks
-(/home/daniel/repositories/projekt-robocup/obstacle/svlnicst.clo
+(./svlnicst.clo
 File: svlnicst.clo 2008/02/25 v1.0 SVMult class option for the Springer LNICST 
 series
 )
@@ -35,7 +35,8 @@ File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \abovecaptionskip=\skip41
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
-) (/usr/share/texlive/texmf-dist/tex/latex/tools/multicol.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/multicol.sty
 Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
 \c@tracingmulticols=\count87
 \mult@box=\box26
@@ -155,8 +156,10 @@ LaTeX Font Info:    Redeclaring math symbol \Omega on input line 732.
 \svitemindent=\dimen133
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2014/09/25 3.9l The Babel package
+
 (/usr/share/texlive/texmf-dist/tex/generic/babel-english/english.ldf
 Language: english 2012/08/20 v3.3p English support from the babel system
+
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2014/09/25 3.9l Babel common definitions
 \babel@savecnt=\count118
@@ -165,33 +168,42 @@ File: babel.def 2014/09/25 3.9l Babel common definitions
 \l@canadian = a dialect from \language\l@american 
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
-)) (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2014/04/25 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/05/08 v1.15 key=value parser (DPC)
 \KV@toks@=\toks18
-) (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
-) (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
+)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
 File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
+
 (/usr/share/texlive/texmf-dist/tex/latex/pdftex-def/pdftex.def
 File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
-) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count119
 ))
 \Gin@req@height=\dimen135
 \Gin@req@width=\dimen136
-) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty
 Package: makeidx 2014/09/29 v1.0m Standard LaTeX package
-) (/home/daniel/repositories/projekt-robocup/obstacle/obstacle.aux)
+) (./obstacle.aux)
 \openout1 = `obstacle.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
@@ -206,10 +218,12 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
+
 (/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-) (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+)
+(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count120
 \scratchdimen=\dimen137
@@ -225,10 +239,12 @@ Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
+
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
-) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
 Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
 Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
@@ -236,16 +252,22 @@ Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
-) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
 (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/grfext.sty
 Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
 Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-)) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+))
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
 Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/etexcmds.sty
 Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
 Package etexcmds Info: Could not find \expanded.
@@ -256,6 +278,7 @@ Package etexcmds Info: Could not find \expanded.
 Package grfext Info: Graphics extension search list:
 (grfext)             [.pdf,.svg,.jpg,.png,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 452.
+
 (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
@@ -268,6 +291,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 39.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 39.
+
 [1
 
 
@@ -275,22 +299,18 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Underfull \hbox (badness 10000) in paragraph at lines 178--199
-
- []
-
 <dbscan1.pdf, id=15, 473.77pt x 307.1475pt>
 File: dbscan1.pdf Graphic file (type pdf)
-<use dbscan1.pdf>
-Package pdftex.def Info: dbscan1.pdf used on input line 201.
+ <use dbscan1.pdf>
+Package pdftex.def Info: dbscan1.pdf used on input line 199.
 (pdftex.def)             Requested size: 242.98541pt x 157.52893pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 223--240
+Underfull \hbox (badness 10000) in paragraph at lines 221--238
 
  []
 
-[3] [4 </home/daniel/repositories/projekt-robocup/obstacle/dbscan1.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 251--263
+[3] [4 <./dbscan1.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 249--261
 
  []
 
@@ -298,30 +318,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 251--263
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
-[6] [7] (/home/daniel/repositories/projekt-robocup/obstacle/obstacle.aux) ) 
+ [6] [7] (./obstacle.aux) ) 
 Here is how much of TeX's memory you used:
- 2579 strings out of 493105
- 34819 string characters out of 6137072
- 116213 words of memory out of 5000000
+ 2577 strings out of 493105
+ 34158 string characters out of 6137072
+ 116214 words of memory out of 5000000
  6021 multiletter control sequences out of 15000+600000
  7802 words of font info for 28 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,6n,23p,1255b,347s stack positions out of 5000i,500n,10000p,200000b,80000s
-</us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
-0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on /home/daniel/repositories/projekt-robocup/obstacle/obstacle.p
-df (7 pages, 546894 bytes).
+ 37i,6n,23p,1204b,347s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+bx9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmtt9.pfb>
+Output written on obstacle.pdf (7 pages, 547011 bytes).
 PDF statistics:
  147 PDF objects out of 1000 (max. 8388607)
  98 compressed objects within 1 object stream
