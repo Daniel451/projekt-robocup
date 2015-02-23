@@ -9,8 +9,3 @@
 !*.svg
 !README.md
 !.gitignore
-
-# Whitelist springer stuff
-svlnicst.clo
-svmultln.cls
-sprmindx.sty
