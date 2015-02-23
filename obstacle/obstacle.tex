@@ -9,6 +9,8 @@
 \usepackage[english]{babel}
 \selectlanguage{english}
 %
+\usepackage{gensymb}
+%
 \usepackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.svg,.jpg,.png,.eps} % first try pdf, then eps, png and jpg
 %
@@ -222,7 +224,8 @@ Throughout our testing process we experienced positive results with 6 minimum po
 \subsubsection{Calculating the position of a robot}
 We didn't have a lot of data to work with. The only data that we could use were the distances to the goal and to the goalposts. There is a lot of other data: like already mentioned the distance to obstacles or other players on the field and the distance to the ball. But the problem with those is that they are not a fixed point on the field. They will change their position and that means they are not suitable to calculate our own position. Or more accurately the distance in front and the distance to the left which depends on the direction of the robot. We will call the distance in front of him u and to the left of him v to stay consistent with the terms used in the code. The following graphic shows what these values are:\\
 insert graphic of U and V values\\
-With these values it's easy to calculate the direct distance to the goal. You can use Pythagora's theorem to do that: \(d = \sqrt{u^2+v^2}\)\\
+We first want to outline how we basically did it and then we are going to explain it in detail. The point of intersection of these two lines is the point the robot is located. So what we need to do is calculate the slope of the two lines so that we have an equation for them. Then it's easy to calculate the point of intersection.\\
+With the u- and v-values it's easy to calculate the direct distance to the goal. You can use Pythagora's theorem to do that: \(d = \sqrt{u^2+v^2}\)\\
 We do that for both goal posts. The size of the field and the goal are known beforehand, so we can use the width of the goal as well. With these three values we can build a triangle:\\
 triangle graphic\\
 With the help of that triangle we are going to calculate the point of intersection of d1 and d2. Let's assume that we have a coordinate system and the point of origin is at the middle of the field. The reason for that is that the origin of our grid world, that is used to save the data, is in the middle of the field too. That means it's easier to translate the position found in that coordinate system to the grid world. But we will explain that in the next section. Otherwise it would have been easier to have the origin in the middle of the goal the robot is facing to. To calculate the point of intersection we need to know the slope of both lines. We can use the angles in the triangle for this purpose:\\
@@ -237,8 +240,24 @@ On the right side we don't need the angle itself but 180 minus the angle:
 Because we want to know the point of intersection of these two lines we need an equation for them:\\
 \(y = slopeleft * x + b1\)\\
 \(y = sloperight * x + b2\)\\
-
-
+\\
+TODO: Explain how to calculate the intersection\\
+\\
+\\
+\\
+Now the robot knows it's own position. But it can't determine the opponent's position on the field yet, because it doesn't know which direction it faces. The robot has his own inner coordinate-system. 0,0 is the middle of the robot. The y-, and x-axis depend on the direction the robot faces. \\
+These are the angles we need to calculate:\\
+Grafik der verschiedenen Winkel.\\
+beta1 and beta2 are calculated with the following equation:\\
+\(\beta = \arcsin{(\frac{v}{d})}\)\\
+We explained earlier how we calculated angle\_right and angle\_left. angle\_left\_new and angle\_right\_new are just 90\degree minus the old angles. 
+This only works if the old angle is under 90 degree, but this is always true for at least one of the two angles.\\
+Now there are different cases which affect how exactly we calculate the angle to the grid. At first we check if u1 or u2 is bigger. In our example we face the opponents goal. If u1 is bigger that means that the robot faces to the left and that the angle is bigger than 180\degree. In that case we have to add 180\degree and in the other case we have subtract from 180\degree. It also determines if we take angle\_right\_new or angle\_left\_new depending on the side the robot is facing. Meaning if u1 is bigger we use angle\_left\_new and if u2 is bigger we use angle\_right\_new.\\
+The v-values are also important. With these values we can determine if the triangle of the u- and v-values is inside or outside the triangle of the two goal posts. Here's a short example what we mean:\\
+Grafik\\
+So depending on that we need to either add beta and angle\_new or subtract beta from angle\_new. This all boils down to these lines in our code:\\
+lines grafik\\
+So now that we know the position of the robots and their orientation we can finally calculate the position of other robots on the field.
 
 
 %%%%%%%%%%%%%%%%%%
@@ -248,10 +267,10 @@ Because we want to know the point of intersection of these two lines we need an 
 %%%%%%%%%%%%%%%%%%
 
 \subsubsection{Grid World}
-Now that we know where our own robot stands we need some way to share the position, so that our team mates can use that knowledge and every robot in our team can profit. For that purpose we use the grid world. We needed a representation of the field, so we could safe and use the data we generated. There are different approaches for that. Other approaches that we considered were a coordinate system that uses millimetres and tree based solution. In the end we decided to use said grid world. For that we divided the field in certain number of cells. The origin of those cells is in the middle of the field:\\
+Now that we know the positions of our own robots we need some way to share these positions, so that our team mates can use that knowledge and every robot in our team can profit. For that purpose we use the grid world. We needed a representation of the field, so we could store and use the data we generated. There are different approaches for that. Other approaches that we considered were a coordinate system that uses millimetres and tree based solution. In the end we decided to use said grid world. Even though Daniel had the idea for that representation of the field it turns out we are not the first robocup-team to use it. \cite{} For that we divided the field in certain number of cells. The origin of those cells is in the middle of the field:\\
 grid world grafik\\
 We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of the own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for the opponents goal too, it is easier to have the origin cell in the middle. There is also a difference between choosing an even number and uneven number respectively on the x and the y direction. We decided to choose an uneven number for both, which means the origin cell is now in the middle of the centre spot. One benefit of that is that there is a cell that is in the middle of the goal where the goalie can stand. When we take the cell at position (0,0) for example and we compare it to a coordinate system, then the upper right edge of that cell would be at (0.5, 0.5) in the coordinate system. When we calculate positions we don't get integers but decimal digits. So if it is over 0.5 instead of the cell with the 0 position we will put it in the cell with the position 1. 
-For that purpose we used a dictionary in Python. We used numbers to fill that dictionary. At initialization the dictionary will be filled with zeroes, which is representing that there is nothing at that particular position. Here is a quick overview of the numbers we fill the dictionary with and what they represent:\\
+For that purpose we used a dictionary in Python. The indexes of the dictionary are the positions in the grid world. For example (0, 0) would be the center of the field. Then we use numbers to fill that dictionary. At initialization the dictionary will be filled with zeroes, which is representing that there is nothing at that particular position. Here is a quick overview of the numbers we fill the dictionary with and what they represent:\\
 0: nothing\\
 1: own goal\\
 2: enemy goal\\
@@ -259,6 +278,8 @@ For that purpose we used a dictionary in Python. We used numbers to fill that di
 4: team mate\\
 5: opponent\\
 6: unclassified obstacle\\
+\\
+So if we want to know the state of a certain position we call that dictionary with that position and get back a number between 0 and 6.\\
 Every robot can determine their own position themselves. The position of the team mates is shared over the wifi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team mates the robots can compare the position of the robots they see with the position of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. Another problem is to keep the map up-to-date. We send the whole map over the wifi, so it would be possible to check if there still is a robot on a certain position when the robot looks in that direction. Another solution would be to delete the positions of the opponents after a certain amount of time. There is the same problem with team mates. Currently we don't send which team mate shares the position, but that would be one solution. Whenever a team mate shares their new position a the receiving robot could delete the old position.\\
 
 
@@ -417,6 +438,7 @@ Grid: an Open Grid Services Architecture for Distributed Systems
 Integration. Technical report, Global Grid Forum (2002)
 
 \bibitem{url} National Center for Biotechnology Information, http://www.ncbi.nlm.nih.gov
+
 
 \end{thebibliography}
 
