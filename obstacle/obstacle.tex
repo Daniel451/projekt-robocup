@@ -76,7 +76,7 @@ not use more than 250 words)
 \section{Introduction}
  
  
-In this project our aim was to improve the way the robots are playing football together. Until then, each robot had its own view/opinion of the surrounding field and so was able to make decisions only due to this information. Our idea was to build an intern team communication system, that provides one robots information for every team member. Thus a form of swarm intelligence could increase the quality of the robots   acting together as a whole team. Considering that, it was necessary to develop a world model to make the information transfomable, unique and easy to provide. Furthermore we detected, that the image prosessing quality was not good enough to precisly determine the robots position and so we did some vision modifications and added some filters. 
+In this project our aim was to implement obstacle avoidance on for a team of robots, that takes part in the RoboCup Soccer Humanoid Kid Size League. Until then, each robot in that team only made decisions only due to its own information, like the vision field. Our idea was to build an intern team communication system, that provides one robots information for every team member. Thus a form of swarm intelligence could increase the quality of the robots acting together as a whole team by increasing the quality of information. Considering that, it was necessary to develop a world model to make the information transfomable, unique and easy to provide. Furthermore we detected, that the image prosessing quality was not good enough to precisly determine the robots position and so we did some vision modifications and added some filters. In the end we used all this to increase the robots reasoning and its behaviour/decision making. When people are playing soccer together it always is a form a communication. They share information to play better as a hole team. We tried to transfer this very important aspect of human soccer to humanoid robot soccer, too.
 
 
 Outline of underlying concepts
@@ -99,9 +99,10 @@ Explain why your work (your approach) is necessary
 %%%%%%%%%%%%%%%%%%
 
 \subsection{Motivation}
-Obstacle recognition and dynamis behaviour towards this is very important if several robots shall act together in a certain way. One of the main reasons for this is to avoid the physical contact between robots. As long as their hardware is not good enough to hold balance when beeing touched, they are very likely to fall and - in worst-case-scenario - bring about anothers robots downfall. This usually causes hight costs for hardware fixes and also disturbs the gameplay. Getting up again can take several seconds and toward the opposite robots it is not within the meaning of fairplay.
-Besides more and especially better knowledge about the surroundings is strategically important in the RoboCup competition. Having a reliably prospect of its own positions, the position of the ball and the opposites robots position combined with a good path finding algorithm can raise the number of scores significantly.
-was war das problem bisher?
+Obstacle recognition and dynamic behaviour towards obstacles is very important if several robots shall act together in a certain way. One of the main reasons for this is to avoid the physical contact between robots. As long as their hardware is not good enough to hold balance when beeing touched, they are very likely to fall and - in worst-case-scenario - bring about anothers robots downfall. This usually causes hight costs for hardware fixes and also disturbs the gameplay. Getting up again can take several seconds and in addition it is not within the meaning of fairplay toward the opposite robots. 
+Besides, more and especially better knowledge about the surroundings is strategically important in the RoboCup competition. Having a reliably prospect of its own positions, the position of the ball and the opposites robots position combined with a good path finding algorithm can raise the number of scores significantly.
+Both aspects cause a big increase in making the robot soccer play more realistic and authentic, which is the main aim of the RoboCup competions.
+  was war das problem bisher?
 
 
 
@@ -115,7 +116,7 @@ was war das problem bisher?
 \subsection{Problems}
 
 \subsubsection{Vision}
-When we checked how good the already implemented algorithm worked we discovered, that ot even the goals were recognized suffinciently. The kind of jumoed from one point to the other and most of the time their were more than two goal postst recognized fo one goal. In addition obstacles at least could be recognise, but there was no behaviour to react in a senseful way. Moreover it was no possible for the robot to distinguish between obstacles, such as team mate or opposite player.
+When we checked how good the already implemented algorithm worked we discovered, that ot even the goals were recognized suffinciently. The kind of jumoed from one point to the other and most of the time there were more than two goal postst recognized fo one goal. In addition obstacles at least could be recognise, but there was no behaviour to react in a senseful way towards them, like choosing a different path to reach the ball or goal. Moreover it was not possible for the robot to distinguish between obstacles, such as team mate or opposite player. This also can increase the teamplay, when one robots knows, that he does not have to fair his opponent, but instead can give the ball to his team mate, who is closer to the goal the him.
 
 \subsubsection{Filtering}
 The whole topic of obstacle recognition relies on information which is extracted out of (heavily) noisy input data.
@@ -126,6 +127,14 @@ Since the robots do not have auto-calibration features the calibration of the ca
 \\
 In addition to that the manual calibration is expansive in terms of time.
 
+
+We detected, that the information concerning the goal position was very noisy. It was not possible to determine the goals position on less then one meter. We wondered how it at least was possible to score any goal with this "visual impairment".
+
+\subsubsection{Localisation}
+seeing an obsacle and seeing the goal does not help much increasign the behaviour, if there is no way to know were they are in relation to the robot. but this requires a system, that provides the robots own position. so we developed a world model, that fits our needs and posibilities and should also be expandable for longtime usage. A special problrm here was, that the soccer field, like in human soccer, too, is axial symmetric. this makes localisation even harder then in ususal mobile robot environments
+
+\subsubsection{Communication}
+When thinking about how to achieve most and best information for the robot, we thought about swarm intelligence mechanisms. Althought our Darwin-OP platfors do have a lot more computing capacity then usual swarm intelligent bots have, we still can benefit from researches in this part of robotics. particularly as communicating is a very important part in "real" human soccer.
 
 
 
