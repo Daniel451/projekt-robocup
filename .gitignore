@@ -1,0 +1,11 @@
+# Ignore all
+*
+
+# Whitelist specific files
+!*/
+!*.tex
+!*.pdf
+!*.txt
+!*.svg
+!README.md
+!.gitignore
