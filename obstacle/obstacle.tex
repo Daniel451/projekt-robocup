@@ -228,9 +228,17 @@ We do that for both goal posts. The size of the field and the goal are known bef
 triangle graphic\\
 With the help of that triangle we are going to calculate the point of intersection of d1 and d2. Let's assume that we have a coordinate system and the point of origin is at the middle of the field. The reason for that is that the origin of our grid world, that is used to save the data, is in the middle of the field too. That means it's easier to translate the position found in that coordinate system to the grid world. But we will explain that in the next section. Otherwise it would have been easier to have the origin in the middle of the goal the robot is facing to. To calculate the point of intersection we need to know the slope of both lines. We can use the angles in the triangle for this purpose:\\
 Vielleicht Grafik\\
-The formula we used is the following: \(\arccos{(\frac{a^2-b^2-c^2}{-2bc})} = \alpha\)\\ Specifically these are the two formulas if you want to calculate the angle from the left post and the right post in the triangle:\\ 
-\(angleleft = \arccos{\frac{(d1^2 - d2^2 - goalwidth^2)}{(-2*d2*goalwidth)}}\)\\
-\(angleright = \arccos{\frac{(d2^2 - d1^2 - goalwidth^2)}{(-2*d1*goalwidth)}}\)\\
+The formula we used is the following: \(\arccos{(\frac{a^2-b^2-c^2}{-2bc})} = \alpha\)\\ Specifically these are the two formulas if you want to calculate the angle from the left post and the right post in the triangle:\\
+\begin{equation}
+	angleleft = \arccos{\frac{(d1^2 - d2^2 - goalwidth^2)}{(-2*d2*goalwidth)}}\\	
+\end{equation}
+
+\begin{equation}\
+angleright = \arccos{\frac{(d2^2 - d1^2 - goalwidth^2)}{(-2*d1*goalwidth)}}
+\label{equ:angle right\Gamma}
+\end{equation}
+\\
+equation~\ref{equ:angle right}
 Now we know the two angles in the triangle. To convert the angles to the slopes in the coordinate system we can do the following:\\
 \(slopeleft = \frac{1}{\tan{angleleft}}\)\\
 On the right side we don't need the angle itself but 180 minus the angle:
@@ -251,7 +259,8 @@ beta1 and beta2 are calculated with the following equation:\\
 We explained earlier how we calculated angle\_right and angle\_left. angle\_left\_new and angle\_right\_new are just 90\degree minus the old angles. 
 This only works if the old angle is under 90 degree, but this is always true for at least one of the two angles.\\
 Now there are different cases which affect how exactly we calculate the angle to the grid. At first we check if u1 or u2 is bigger. In our example we face the opponents goal. If u1 is bigger that means that the robot faces to the left and that the angle is bigger than 180\degree. In that case we have to add 180\degree and in the other case we have subtract from 180\degree. It also determines if we take angle\_right\_new or angle\_left\_new depending on the side the robot is facing. Meaning if u1 is bigger we use angle\_left\_new and if u2 is bigger we use angle\_right\_new.\\
-The v-values are also important. With these values we can determine if the triangle of the u- and v-values is inside or outside the triangle of the two goal posts. Here's a short example what we mean:\\
+The v-values are also important. With these values we can determine if the triangle of the u- and v-values is inside or outside the triangle of the two goal posts. Here's a short example what we mean:
+\\
 Grafik\\
 So depending on that we need to either add beta and angle\_new or subtract beta from angle\_new. This all boils down to these lines in our code:\\
 lines grafik\\
