@@ -118,19 +118,32 @@ Both aspects cause a big increase in making the robot soccer play more realistic
 \subsection{Problems}
 
 \subsubsection{Vision}
-When we checked how good the already implemented algorithm worked we discovered, that ot even the goals were recognized suffinciently. The kind of jumoed from one point to the other and most of the time there were more than two goal postst recognized fo one goal. In addition obstacles at least could be recognise, but there was no behaviour to react in a senseful way towards them, like choosing a different path to reach the ball or goal. Moreover it was not possible for the robot to distinguish between obstacles, such as team mate or opposite player. This also can increase the teamplay, when one robots knows, that he does not have to fair his opponent, but instead can give the ball to his team mate, who is closer to the goal the him.
+For an intelligent obstacle recognition several sufficiently pre-processed data input is needed to localise the obstacle itself, localise the robot itself, classify the obstacle (ball, goal, teammate, enemy, other obstacle) and develop an adequate strategy of (re-)action.
+\\
+One of our first problems were the already implemented algorithm for obstacle detection and goal detection. We discovered that neither obstacles nor goals were tracked/recognized satisfactorily for our tasks.
+\\
+The obstacle detection was too imprecisely to fulfill our plans of an intelligent reaction and the biggest problem was the missing localisation of the robot itself which is realized by tracking the goals (via tracking the two goal posts). Even when the robot stands still completely in a distance of two metres directly in front of the goal the vision detected four to six goal posts most of the time.
+\\
+The majority of false positives were shadows of the real posts or random mirages/reflections on the walls. This resulted in "jumping" goal posts because for the behaviour two posts are selected and out of the four to six possible posts the selection process to distinguish between the possibilities was not stable.
+\\
+In addition to that even when the real goal posts could be identified for several frames the algorithm often was not able to calculate the correct relative distances to the goal posts.
+\\
+The algorithm was designed to draw a rectangle other a possible goal post but it had no specific filters for the dimensions. This led to rectangles having wrong position, height and width compared to the original post. Some recorded datasets showed rectangles with twice or half the size of the real post and positional failures of several 10 centimetres.
+\\
+Appropriately reacting behaviour systems e.g. for intelligent obstacle recognition, localisation and further path planning or even postprocessing filters would fail on such raw data.
 
 \subsubsection{Filtering}
 The whole topic of obstacle recognition relies on information which is extracted out of (heavily) noisy input data.
 \\
-For our solutions primarily the goal post data and the later calculated goal center information is important, 
+For our solutions primarily the goal post data and the later calculated goal center information is important to calculate real, absolute coordinates for localisation purposes on the field out of the relative camera input.
+\\
+The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) oftenly showed a spreaded distribution of points in a circle with a radius of nearly half a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and higher.
+\\
+Having such noisy data renders absolute positioning tasks and intelligent obstacle recognition (avoidance in case of real obstacles, path planning in case of balls) impossible.
 \\
 Since the robots do not have auto-calibration features the calibration of the camera and motor angles deteriorate the noise problem because once the calibration is manually done its configuration is static but the real values vary other time, for example when the robot falls accidently.
 \\
 In addition to that the manual calibration is expansive in terms of time.
-
-
-We detected, that the information concerning the goal position was very noisy. It was not possible to determine the goals position on less then one meter. We wondered how it at least was possible to score any goal with this "visual impairment".
 
 \subsubsection{Localisation}
 seeing an obsacle and seeing the goal does not help much increasign the behaviour, if there is no way to know were they are in relation to the robot. but this requires a system, that provides the robots own position. so we developed a world model, that fits our needs and posibilities and should also be expandable for longtime usage. A special problrm here was, that the soccer field, like in human soccer, too, is axial symmetric. this makes localisation even harder then in ususal mobile robot environments
