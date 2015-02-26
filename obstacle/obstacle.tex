@@ -383,9 +383,11 @@ So some years ago, a RoboCup Soccer Humanoid Kid Size team implemented a WiFi co
 This standart already was used in our team for very simple behaviour. for example because of the lack of localisation, it was not possile for a fiel player to determine whether a goal was the opposite goal or his own goal. So the goalie could send information like "The ball is very close to me" and thus make the field player stop playing on that goal, but turning around and trying the ohter goal. But this was a very unsecure mechanism, because the WiFi on competitions has a very high package loss and is very unreliable. 
 So our idea was, that every robot could provide its own gridworld and in return receive every other robots gridworlds. By weighting the incoming data due to reliability (like taking the median for each position of ten or so incoming grids) or actuality (I did not see a goal for a long time, dont know whether my own position is right or not, i will take a new grid and search a goal) the average information quantity and quality could increase a lot.
 But our a big problem was, that via MiteCom it is only possible to send 32 bit integer values. Foremost we thought about implementing our own standart, but when thinking about it a secound time, it seemed a good idea to use it. First of all, because of the aspect of universality mentioned above, that will be needed in the future. But forthermore it is not a bad idea to only send integers. 
-
-nur ein int
-codierung, mehrere für werte und feldteile
+As already mentioned, on competitions the quality of WIFI is not very hight. So the big package loss could cause incompletely received data, and so only sending "small" 32bit integers is more practicable. 
+So the problem appeard, how to encode our dictonary, that represents the grid world into an integer.
+Our solution is based on binar numbering system. Each of the 32 positons represents one cell in the grid world. But dividing the hole $54m^2$ field in only 32 cells seemed very few. So we use 8 integers, each representing one eighth of the field.
+Besides, the binary integer can only depict one kind of information (numbers 1-6, see Gridworld) at a time. So we also need one integer per information type.
+When calculating these integers, the current part of the grid is scanned for the certain kind of information. When a gridcell is found, the gris cells number becomes the exponent of 2 andthe sum of all of them gives the 32bit integer, that is thent via MiteCom.
 
 %%%%%%%%%%%%%%%
 %%%         %%%
