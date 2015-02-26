@@ -23,7 +23,7 @@
 %
 \mainmatter              % start of the contribution
 %
-\title{Humanoid robot obstacle recognition via data filtering, localisation and robot-to-robot communication in context of RoboCup} 
+\title{Humanoid Robot Obstacle Recognition via Data Filtering, Localisation and Robot-to-Robot Communication in Context of RoboCup} 
 %
 \titlerunning{Humanoid robot obstacle recognition}  % abbreviated title (for running head)
 %                                     also used for the TOC unless
@@ -76,20 +76,20 @@ not use more than 250 words)
 %%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
- 
- 
-In this project our aim was to implement obstacle avoidance on for a team of robots, that takes part in the RoboCup Soccer Humanoid Kid Size League. Until then, each robot in that team only made decisions only due to its own information, like the vision field. Our idea was to build an intern team communication system, that provides one robots information for every team member. Thus a form of swarm intelligence could increase the quality of the robots acting together as a whole team by increasing the quality of information. Considering that, it was necessary to develop a world model to make the information transfomable, unique and easy to provide. Furthermore we detected, that the image prosessing quality was not good enough to precisly determine the robots position and so we did some vision modifications and added some filters. In the end we used all this to increase the robots reasoning and its behaviour/decision making. When people are playing soccer together it always is a form a communication. They share information to play better as a hole team. We tried to transfer this very important aspect of human soccer to humanoid robot soccer, too.
 
-
-Outline of underlying concepts
-
-Brief summary of relevant theoretical background knowledge
-
-Review of existing (published) work relevant for your topic(s)
-
-Motivate the reader for the issue(s) you are trying to solve
-
-Explain why your work (your approach) is necessary
+In this project our aim was to implement obstacle recognition for a team of robots taking part in the RoboCup Soccer Humanoid Kid Size League. So far each robot in the team made decisions due to its own information only such as the field of vision. This led to a decision making being dependent on one robot's limited individual data.
+\\
+Our objective was to develop modules which share data not only on one robot but between all team mates for realizing an intelligent behaviour via localisation and mapping obstacles in this world model.
+\\
+For implementing such modules it is required to have sufficient vision data of the environment. Gathering this information we noticed that the supplied quality does not match this task's demands.
+\\
+Furthermore the position data of the robot and other objects were noisy, so data filtering was necessary.
+\\
+Intelligent behaviour requires a world model which provides its information in a transformable and unique way between modules or even robots. Fulfilment of this task requires an internal team communication system contributing one robot's information for every team member.
+\\
+Thus a form of swarm intelligence could increase the quality of the robots acting together as a whole team by increasing the quality of information.
+\\
+Playing football always requires communication, so sharing information improves the team's efficiency. Transfering this key aspect of football to the software was one of our main ambitions.
 
 
 
@@ -101,10 +101,14 @@ Explain why your work (your approach) is necessary
 %%%%%%%%%%%%%%%%%%
 
 \subsection{Motivation}
-Obstacle recognition and dynamic behaviour towards obstacles is very important if several robots shall act together in a certain way. One of the main reasons for this is to avoid the physical contact between robots. As long as their hardware is not good enough to hold balance when beeing touched, they are very likely to fall and - in worst-case-scenario - bring about anothers robots downfall. This usually causes hight costs for hardware fixes and also disturbs the gameplay. Getting up again can take several seconds and in addition it is not within the meaning of fairplay toward the opposite robots. 
-Besides, more and especially better knowledge about the surroundings is strategically important in the RoboCup competition. Having a reliably prospect of its own positions, the position of the ball and the opposites robots position combined with a good path finding algorithm can raise the number of scores significantly.
-Both aspects cause a big increase in making the robot soccer play more realistic and authentic, which is the main aim of the RoboCup competions.
-  was war das problem bisher?
+
+Obstacle recognition and dynamic behaviour, specifically pathfinding towards or around obstacles is important if several robots shall act together as a team in a certain way to achieve specified goals.
+\\
+Team play/efficiency, fair play and hardware costs are the main reasons for intelligent obstacle recognition. One aspect of fair play is to avoid the physical contact between robots and as long as their hardware sometimes loses balance when the robot is touched, it is very likely to fall and - in worst-case-scenario - causes other robots downfall. Such collisions usually cause high costs for hardware fixes and also disturbs the gameplay. Getting up again takes several seconds and in addition it is not within the meaning of fairplay. Furthermore physical contacts are not compliant to the rules.
+\\
+Moreover and especially better knowledge about the surroundings is strategically important in the RoboCup competition. Having a reliable prospect of its own position, the position of the ball and the opponents' position combined with adequate path finding algorithm can raise the number of scores significantly.
+\\
+Those aspects cause a big increase in making the robot football play more realistic and authentic, which is the main aim of the RoboCup competions.
 
 
 
