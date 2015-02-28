@@ -299,7 +299,7 @@ Throughout our testing process we experienced positive results with 6 minimum po
 
 \subsubsection{Calculating our robot's position}
 The robot provides a lot of different data.
-But unfortunately a most of the values are not fixed points on the field and so they are unsuitable to calculate the robot's position. From the data given by the robot only the distances to the goal posts are sufficient for our purposes.
+But unfortunately most of the values are not fixed points on the field and so they are unsuitable to calculate the robot's position. From the data given by the robot only the distances to the goal posts are sufficient for our purposes.
 \\
 But the information the robot actually provides is not the direct distance but only the distance in front of the robot and the distance to the left of the robot to the objects. We will call the distance in front of the robot u and to the left of it v to stay consistent with the terms used in the code. figure~\ref{fig:uvvalues} contains an example of these values.
 \begin{figure}
@@ -311,16 +311,20 @@ At first we want to outline how we basically calculated the position of our own 
 \\
 For this calculation we used the u- and v-values to two goal posts. We use these values to calculate the direct distances to the goal and get two lines that intersect exactly at the robot's location. For this reason it's necessary to calculate the slope of the two lines so that we can form equations for them. With these we can determine the point of intersection. And once we know the point of intersection we also know the robot's position.
 \\
+For these calculations we need a coordinate system. That system is similar to the grid world, that we explain in a later segment. Meaning the origin is also at the mid point of the field and the opponent's goal is in the positive range on the x-axis and our goal is in the negative range. All following calculations are done in millimetre and later converted to the units of the grid world. Also we are going to assume that the robot faces the opponent's goal. 
+\\
 We are going to call the u- and v-values for the left post \(u_{1}\) and \(v_{1}\), and for the right post \(u_{2}\) and \(v_{2}\). You can use Pythagora's theorem to calculate the direct distances to the goal posts as done in equation~\ref{equ:distance}.
 \begin{equation}
 	d = \sqrt{u^2+v^2}
 	\label{equ:distance}
 \end{equation}
-We do that for both goal posts and we are going to call the distance to the left post \(d_{1}\) and to the right post \(d_{2}\). We want to know the angle between these lines and the goal width \(\psi\) so we need to know this value as well. The goal width doesn't change and we can retrieve it in the code, but the robot's goal post recognition can be very inaccurate. Meaning even though in reality the goal width is always the same, according to the robot's values the goal width is changing all the time. So the robot calculates it's own value for the goal width too. We use the u- and v-values to create vectors and calculate a vector between the two goal posts:
+We do that for both goal posts and we are going to call the distance to the left post \(d_{1}\) and to the right post \(d_{2}\). 
+\\
+We want to know the angle between these lines and the goal width \(\psi\). The goal width doesn't change and we can retrieve it in the code, but the robot's goal post recognition can be very inaccurate. So even though in reality the goal width is always the same, according to the robot's values the goal width is changing all the time. So the robot calculates it's own value for the goal width too. We use the u- and v-values to create vectors and calculate a vector between the two goal posts:
 \begin{equation}
 	\vec{gw}=\left(\begin{array}{c} u_{1} \\ v_{1} \end{array}\right) - \left(\begin{array}{c} u_{2} \\ v_{2} \end{array}\right)
 \end{equation}
-The absolute value of \(gw\) is the goal width \(\psi\).
+The absolute value of the vector \(gw\) is the goal width \(\psi\).
 \\
 Now that we computed these three values we can form a triangle like in figure~\ref{fig:triangle}.
 \begin{figure}
@@ -328,7 +332,7 @@ Now that we computed these three values we can form a triangle like in figure~\r
 	{\caption{}\label{fig:triangle}}
 \end{figure}
 \\
-With the help of that triangle we are going to calculate the point of intersection of \(d_{1}\) and \(d_{2}\). Let's assume we have a coordinate system and the point of origin is at the middle of the field. The reason for that is that the origin of our grid world, that is used to save the data, is in the middle of the field too. That means it's easier to translate the position found in that coordinate system to the grid world. But we will explain that in the next section. Otherwise it would have been easier to have the origin in the middle of the goal the robot is facing to.
+With the help of that triangle we are going to calculate the point of intersection of \(d_{1}\) and \(d_{2}\). 
 \\ 
 To calculate the point of intersection we need to form two equations for \(d_{1}\) and \(d_{2}\). In order to do that it's necessary to know the slope of both lines. 
 \\
@@ -356,13 +360,13 @@ To convert the angles to the slopes of the two lines in the coordinate system, w
 	sloperight = \frac{1}{\tan{angleright}}
 	\label{equ:sloperight}
 \end{equation}
-
-On the left side we don't need the angle itself but 180 minus the angle:
+\\
+On the left side we don't need the angle itself but the angle above the line, which is 180\(\degree\) - angleleft:
 \begin{equation}
 	slopeleft = \frac{1}{\tan{(180\degree - angleleft)}}
 	\label{equ:slopeleft}
 \end{equation}
-Because we want to know the point of intersection of these two lines we need an equation for them:
+Because we want to know the point of intersection of these two lines we need equations for them:
 \begin{equation}
 	y_{1} = slopeleft * x + b_{1}
 	\label{equ:y1}
@@ -371,14 +375,14 @@ Because we want to know the point of intersection of these two lines we need an 
 	y_{2} = sloperight * x + b_{2}
 	\label{equ:y2}
 \end{equation}
-\(b_{1}\) and \(b_{2}\) are the points of intersection with the y-axis. Our coordinate system has it's point of origin at the middle point of the field. The reason for that is that the origin of our grid world is at that point as well. So converting the values is a lot easier. The unit of the point of intersection is now millimetre, but we convert these values to enter the robot's position into our grid world. 
+\(b_{1}\) and \(b_{2}\) are the points of intersection with the y-axis. Our coordinate system has it's point of origin at the middle point of the field. As stated the reason for that is that the origin of our grid world is at that point as well, so it's easier to convert the values later on.
 \\
 We know the x- and y-values at the points of the goal posts. It is half the field length for both x-values and half the goal width for \(y_{1}\) and minus half the goal width for \(y_{2}\). With these points we can determine the values for \(b_{1}\) and \(b_{2}\) by rearranging the formulas. Afterwards we equate the equations ~\ref{equ:y1} and ~\ref{equ:y2} and solve this new equation for x. Then we can enter the found x-value in one of the two formulas to determine y. The found x- and y-value is the position of the robot in the coordinate system.
 \\
-\\
-Now the robot knows it's own position. But it can't determine the opponent's position on the field yet, because it doesn't know which direction it faces. The robot has its own inner coordinate-system. 0,0 is the middle of the robot. The orientation of the y-, and x-axis depend on the direction the robot faces.\\
+\subsubsection{Calculating our robot's angle to the x-axis}
+Now the robot knows its own position. But it can't determine the opponent's position on the field yet, because it doesn't know which direction it faces. The robot has its own inner coordinate-system. (0,0) is the middle of the robot. The orientation of the y-, and x-axis depend on the direction the robot faces.\\
 So at first we calculate how many degrees the robot would have to turn to face one of the two goal posts. If the robot turns to that angle and would walk directly to the goal post he would end up directly in front of it, but not looking directly at it. To achieve that we need another angle. Now if the robot would turn that angle he would look directly at the goal post. So all we need to do at the end is, according to the exact situation at hand, either add or subtract the two angles we calculated and we would know the angle to the x-axis.
-In figure~\ref{fig:angles} the first angle we mentioned is \(\beta_{2}\) and the second one is newangleright.
+In figure~\ref{fig:angles} the first angle we mentioned is \(\beta_{2}\) and the second one is new\_angle\_right.
 \begin{figure}
  	\centerline{\includegraphics[width=0.6\textwidth]{angles.pdf}}
 	{\caption{Example of angles needed to calculate the angle to the x-axis of our grid}\label{fig:angles}}
@@ -387,18 +391,23 @@ In figure~\ref{fig:angles} the first angle we mentioned is \(\beta_{2}\) and the
 \begin{equation}
 	\beta = \arcsin{(\frac{v}{d})}
 \end{equation}
-We explained earlier how we calculated angle\_right and angle\_left. angle\_left\_new and angle\_right\_new are just 90\degree minus the old angles. 
+We explained earlier how we calculated angle\_right and angle\_left. new\_angle\_left and new\_angle\_right are just 90\degree minus the old angles. 
+\\
 This only works if the old angle is under 90 degree, but this is always true for at least one of the two angles.
 \\
-Now there are different cases which affect how exactly we calculate the angle to the grid. At first we check if u1 or u2 is bigger. In our example we face the opponents goal. If u1 is bigger that means that the robot faces to the left and that the angle is bigger than 180\degree. In that case we have to add 180\degree and in the other case we have subtract from 180\degree. It also determines if we take angle\_right\_new or angle\_left\_new depending on the side the robot is facing. Meaning if u1 is bigger we use angle\_left\_new and if u2 is bigger we use angle\_right\_new.
+Now there are different cases which affect how exactly we calculate the angle to the grid. At first we check if \(u_{1}\) or \(u_{2}\) is bigger. In our example we face the opponents goal. If \(u_{1}\) is bigger that means that the robot faces to the left and that the angle is smaller than 180\degree. In that case we just add \(\beta_{1}\) to new\_angle\_left.
 \\
-The v-values are also important. With these values we can determine if the triangle of the u- and v-values is inside or outside the triangle of the two goal posts.
-So depending on that we need to either add beta and angle\_new or subtract beta from angle\_new. 
+In the other case \(u_{2}\) is bigger and the robot faces to the right. In that case the angle to the x-axis has to be over 180\degree. We simply subtract \(\beta_{2}\) plus new\_angle\_right from 360\degree.
 \\
 So now that we know the position of the robots and their orientation we can finally calculate the position of other robots on the field.
 
 \subsubsection{Calculating other robot's positions}
-When our robot sees another robot it gets it's distance as u- and v-values. Once again we can calculate the direct distance by using equation~\ref{equ:distance}. We want to use polar coordinates to calculate the position of the other robots. These consist of the direct distance \(r\) to the object and the polar angle \(\phi\), which is the angle between r and the x-axis of the grid in our case. In order to calculate \(\phi\) we need to know the angle from u to r. We use equation~\ref{equ:angle1} for this purpose, and substitute u for a, v for b and r for c. 
+When our robot sees another robot it gets its distance as u- and v-values. Once again we can calculate the direct distance by using equation~\ref{equ:distance}. We want to use polar coordinates to calculate the position of the other robots. These consist of the direct distance \(r\) to the object and the polar angle \(\phi\), which is the angle between r and the x-axis of the grid in our case. 
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.6\textwidth]{polar.pdf}}
+	{\caption{Example of r and \(\phi\)}\label{fig:polar}}
+\end{figure}
+In order to calculate \(\phi\) we need to know the angle from u to r. We use equation~\ref{equ:angle1} for this purpose, and substitute u for a, v for b and r for c. 
 \\
 We already determined the angle from the direction the robot is facing to the grid.
 \\
@@ -434,7 +443,9 @@ Now that we know the positions of our own and other robots we need some way to s
  	\centerline{\includegraphics[width=1\textwidth]{gridworld.pdf}}
 	{\caption{The grid world divides the field into a certain amount of cells.}\label{fig:gridworld}}
 \end{figure}
-We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of our own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for both goals, it is easier to have the origin cell in the middle. There is also a difference between choosing an even number and uneven number respectively on the x and the y direction. We decided to choose an uneven number for both, which means the origin cell is now in the middle of the centre spot. One benefit of that is that there is a cell that is exactly in the middle of the goal where the goalie stands most of the time. 
+We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of our own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for both goals, it is easier to have the origin cell in the middle. 
+\\
+There is also a difference between choosing an even number and uneven number respectively on the x and the y direction. We decided to choose an uneven number for both, which means the origin cell is now in the middle of the centre spot. One benefit of that is that there is a cell that is exactly in the middle of the goal where the goalie stands most of the time. 
 \\
 Also when we take the cell at position (0,0) for example and we compare it to a similar coordinate system, then the upper right edge of that cell would be at (0.5, 0.5) in the coordinate system. When we calculate positions we don't get integers but decimal digits. 
 So when we determine a robot's position on the field, we can simply round that result and know into what cell we have to put it.
@@ -459,11 +470,11 @@ To store the data we use a dictionary in Python. The indexes of the dictionary a
 6: unclassified obstacle\\
 7: ball\\
 \\
-So if we want to know the state of a certain position we call that dictionary and get back a number between 0 and 7.
+So if we want to know the state of a certain position we call that dictionary and get back a number between 0 and 7. At the moment we don't use the numbers 6 and 7, but they could be useful in the future.
 \\
 Every robot can determine their own position themselves. The position of the team members is shared over the wi-fi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team members the robots can compare the position of the robots they see with the location of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. 
 \\
-This is one of the advantages of this representation of the field. The inaccuracy makes it easier to compare the found objects on the map between team mates. If we would measure everything in millimetre, every robot would probably calculate slightly different positions for the objects and so comparing them would become more difficult.
+This is one of the advantages of this representation of the field. The inaccuracy makes it easier to compare the found objects on the map between team mates. If we would measure everything in millimetre, every robot would probably calculate slightly different positions for the objects and so matching them would become more difficult.
 \\
 
 
