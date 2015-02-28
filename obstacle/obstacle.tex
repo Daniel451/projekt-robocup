@@ -11,6 +11,8 @@
 %
 \usepackage{svg}
 %
+\usepackage{wrapfig}
+%
 \usepackage{amsmath}
 %
 \usepackage{gensymb}
@@ -31,9 +33,9 @@
 %                                     also used for the TOC unless
 %                                     \toctitle is used
 %
-\author{Benjamin Scholz \and Daniel Speck \and Judith Hartfill}
+\author{Daniel Speck, Benjamin Scholz, Judith Hartfill}
 %
-\authorrunning{Benjamin Scholz \and Daniel Speck \and Judith Hartfill}   % abbreviated author list (for running head)
+\authorrunning{Daniel Speck, Benjamin Scholz, Judith Hartfill}   % abbreviated author list (for running head)
 %
 %%%% list of authors for the TOC (use if author list has to be modified)
 \tocauthor{}
@@ -241,15 +243,25 @@ Those obstacles information is processed separately and can be filtered to stabi
 \subsection{Filtering}
 
 \subsubsection{Data noise}
+
+\begin{wrapfigure}{r}{0.6\textwidth}
+  \begin{center}
+    \includegraphics[width=0.58\textwidth]{noise_data_plot.pdf}
+  \end{center}
+  {\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
+  \label{fig:noise1}}
+\end{wrapfigure}
 The majority of the bitbots code works without filters on raw data, especially in the case of goal information no postprocessing exists.
 \\
 The goal information (goal post positions and goal center position) is needed to localise the robot on the field in our case. Intelligent behaviour according to obstacle recognition relies on this localisation (our grid world module) so the goal information is the most important data for our software and has to be as accurate as possible.
 
-\begin{figure}
- 	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
-	{\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
-	\label{fig:noise1}}
-\end{figure}
+
+
+%\begin{figure}
+% 	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
+%	{\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
+%	\label{fig:noise1}}
+%\end{figure}
 
 As shown by figure~\ref{fig:noise1} the noise of the raw data in combination with missing calibration is too high to allow an accurate localisation.
 \\
