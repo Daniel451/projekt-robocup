@@ -407,24 +407,24 @@ The formula we used is the following:
 Specifically these are the two formulas if you want to calculate the angle of the left post and the right post in the triangle:
 \\
 \begin{equation}
-	angleleft = \arccos{\frac{(d_{1}^2 - d_{2}^2 - \psi^2)}{(-2*d_{2}*\psi)}}
+	angleleft = \arccos{\frac{(d_{2}^2 - d_{1}^2 - \psi^2)}{(-2*d_{1}*\psi)}}
 	\label{equ:angleleft}
 \end{equation}
 
 \begin{equation}\
-	angleright = \arccos{\frac{(d_{2}^2 - d_{1}^2 - \psi^2)}{(-2*d_{1}*\psi)}}
+	angleright = \arccos{\frac{(d_{1}^2 - d_{2}^2 - \psi^2)}{(-2*d_{2}*\psi)}}
 	\label{equ:angleright}
 \end{equation}
 \\
 To convert the angles to the slopes of the two lines in the coordinate system, we can do the following:\\
 \begin{equation}
-	sloperight = \frac{1}{\tan{angleright}}
+	sloperight = (-1)*\frac{1}{\tan{angleright}}
 	\label{equ:sloperight}
 \end{equation}
 \\
 On the left side we don't need the angle itself but the angle above the line, which is 180\(\degree\) - angleleft:
 \begin{equation}
-	slopeleft = \frac{1}{\tan{(180\degree - angleleft)}}
+	slopeleft = (-1)*\frac{1}{\tan{(180\degree - angleleft)}}
 	\label{equ:slopeleft}
 \end{equation}
 Because we want to know the point of intersection of these two lines we need equations for them:
@@ -583,7 +583,11 @@ However, when a team mate is added to the Grid World, the only value it cannot o
 \subsection{Localisation}
 Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Or one could coordinate which player should go to the goal depending on who has the shortest path. And there's a lot more potential for usages.
 \\
-Unfortunately we didn't have enough time to conduct our tests of the grid world to the end. So there are still some bugs. Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to benefit from it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
+Unfortunately we didn't have enough time to conduct our tests of the grid world to the end. So there are still some bugs. 
+\\
+Towards the end of our project we implemented a solution that computes the position of our robot with vectors instead of angles.
+\\
+Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to benefit from it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
 \\
 So there is still a lot of room for improvements, but this was something we expected at the start of the project. It's unfortunate that there wasn't more time to test our localisation and fix the rest of the bugs, but apart from this we are satisfied with the resulting localisation.
 \subsection{Communication}
@@ -637,7 +641,6 @@ Qazvin Islamic Azad University, Qazvin, Iran (2014)
 
 \bibitem{tree} van der Molen, H.: Self-localization in the RoboCup Soccer Standerd Platform League with the use of a Dynamic Tree. A Bachelor Thesis in Artificial Intelligence, University Of Amsterdam (2011)
 
-\bibitem{url} National Center for Biotechnology Information, http://www.ncbi.nlm.nih.gov
 
 
 \end{thebibliography}
