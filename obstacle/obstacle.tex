@@ -11,6 +11,8 @@
 %
 \usepackage{svg}
 %
+\usepackage{amsmath}
+%
 \usepackage{gensymb}
 %
 \usepackage{graphicx}
@@ -262,28 +264,51 @@ Those obstacles information is processed separately and can be filtered to stabi
 The majority of the bitbots code works without filters on raw data, especially in the case of goal information no postprocessing exists.
 \\
 The goal information (goal post positions and goal center position) is needed to localise the robot on the field in our case. Intelligent behaviour according to obstacle recognition relies on this localisation (our grid world module) so the goal information is the most important data for our software and has to be as accurate as possible.
-\\
 
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
+	{\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
+	\label{fig:noise1}}
+\end{figure}
+
+As shown by figure~\ref{fig:noise1} the noise of the raw data in combination with missing calibration is too high to allow an accurate localisation.
+\\
+We define a distance vector $\vec{d} := \left( \begin{array}{cc} u & v \end{array} \right)^{T}$ to contain the horizontal ($u$) and vertical ($v$) distance to a point relatively to the robot's position. 
+\\
+The vector 
+$\vec{d_{0}} := \left( \begin{array}{cc} 2000 & 0 \end{array} \right)^{T}$ is the real vector to the goal center and vectors like
+$\vec{d_{1}} := \left( \begin{array}{cc} 1797 & -25 \end{array} \right)^{T}$ and
+$\vec{d_{2}} := \left( \begin{array}{cc} 1877 & 107 \end{array} \right)^{T}$
+are the vectors of two recorded points shown in figure~\ref{fig:noise1}.
+\\
+$\vec{d}_{0}$ differs to $\vec{d}_{1}$ by
+$ 204 = \sqrt{(2000 - 1797)^2 + (0 - (-25))^2}$ and 
+$\vec{d}_{0}$ to $\vec{d}_{2}$
+by $ 163 = \sqrt{(2000 - 1877)^2 + (0 - 107)^2}$
+in euclidean distance.
+\\
+Those differences are too large to ensure a correct mapping in our grid world module as the differences occurred in less than three seconds while the robot was standing still.
+\\
+Nevertheless clusters of points can be detected in figure~\ref{fig:noise1} and this is the reason why we decided to filter the data via a DBSCAN algorithm.
 
 \subsubsection{DBSCAN} Our approach to reduce the noise on data was implementing a two dimensional version of the DBSCAN (density-based scanning) algorithm \cite{ester:kriegel}, which we slightly customized to our needs.
 \\
 At first our code was an exact re-implementation in pure Python of the DBSCAN algorithm \cite{ester:kriegel}
-originally proposed by Martin Ester et al. in 1996 but this procedure was just for testing to ensure the algorithm meets our requirements.
+originally proposed by Martin Ester et al. in 1996 but this procedure was just for testing to assure the algorithm meets our requirements.
 \\
 Due to the performance issues of pure Python implementations we refactored the complete code and made use of Numpy (mainly) and other SciPy libraries. As a consequence of the C/C++ core implementations of those libraries the overall execution time of our code decreased.
 \\
 In addition to that the refactored, performant version of our DBSCAN is implemented object oriented. This leads to an overhead in space complexity but offered easier debugging as well as an additional improvement of execution time because the calculations are saved in objects and those cached results are re-used as much as possible.
 \\
-In our tested cases the pure Python implementation ran about 8 - 12 times slower on average (dependent on current background tasks) on our darwin-op hardware compared to our current object oriented Python implementation with Numpy and other SciPy libraries.
+In our tested cases the pure Python implementation ran about 8 to 12 times slower on average (dependent on current background tasks) on our darwin-op hardware compared to our current object oriented Python implementation with Numpy and other SciPy libraries.
 \\
 Those optimizations are essential considering the very limited computing power of our current darwin-op robots.
 \\
-For calculating the goal information each goal posts raw input data (if post is seen) is recorded separately in buffers of a maximum size of 60 items on every new frame. If a buffer is full, the oldest entry is dropped and the newest saved. As data structure for the buffers we chose Python Deque objects.
+For calculating the goal information each goal posts raw input data (if post is seen) is recorded separately in buffers of a maximum size of 60 items. Every new frame delivers one new data set and on average the robots architecture is able to handle about 20 frames per second. If a buffer is full, the oldest entry is dropped and the newest saved. As data structure for the buffers we chose Python Deque objects for easy appending and extracting data sets.
 \\
 If the robot changes its position, old data sets would mess up the calculation, so our DBSCAN object automatically drops data sets which are older than 10 seconds to prevent those kind of failures. Minor positional changes in the meantime are no problems in most cases, because the DBSCAN would filter those datasets appropriately.
 \\
-In figure~\ref{fig:dbscan1} a graphical illustration of the DBSCAN algorithm
-is shown.
+In figure~\ref{fig:dbscan_illustration1} a graphical illustration of the DBSCAN algorithm is shown.
 
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{dbscan1.pdf}}
@@ -291,11 +316,17 @@ is shown.
 	The points labeled with `C' are core points,
 	the yellow ones labeled with `D' are density-reachable points
 	and the red ones labeled with `N' noise points.
-	The minimum points parameter is set to $4$ in this example.}\label{fig:dbscan1}}
+	The minimum points parameter is set to $4$ in this example.}\label{fig:dbscan_illustration1}}
 \end{figure}
 
+The DBSCAN algorithm has two parameters: the minimum points $\kappa$ (in some papers referred only with "minimum points"), which are required to initialize a new cluster and the radius $\epsilon$ in which neighbour points should be searched.
+\\
 Throughout our testing process we experienced positive results with 6 minimum points and an epsilon of 50 as parameters for our DBSCAN implementation.
 
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{dbscan_data_plot1.pdf}}
+	{\caption{Plot of DBSCAN-filtered data}\label{fig:dbscan_plot1}}
+\end{figure}
 
 
 
