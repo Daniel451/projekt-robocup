@@ -9,3 +9,6 @@
 !*.svg
 !README.md
 !.gitignore
+
+# ignore obstacle pdf
+obstacle/obstacle.pdf
