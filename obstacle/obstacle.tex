@@ -57,14 +57,14 @@
 %%%%%%%%%%%%%%%%
 
 \begin{abstract}        % give a summary of your paper
-The abstract should summarize the contents of the paper. It will be set in 9-point
-font size and be inset 1.0 cm from the right and left margins.
-There will be two blank lines before and after the Abstract.
+In RoboCup Soccer an intelligent behaviour is needed to be successful. This can be achieved with communicating robots to make team play possible. For team play and path planning a shared world model is required as well as the information of objects \& obstacles inside this world model. To locate those entities accurate data has to be supplied and this makes filtering necessary.
+\\
+The location is done via a grid world and for filtering a customized DBSCAN algorithm is used as well as an artificial neural network.
+\\
+The communication uses the mitecom standard.
 
-Use the abstract section to provide a teaser for the contents of your report I Do not attempt to write a review or summary I Be concise: Your abstract should have 200 words or less (do
-not use more than 250 words)
 %                         please supply keywords within your abstract
-\keywords {obstacle recognition, obstacle avoidance, localisation, filtering, data smoothing, vision, swarm intelligence}
+\keywords {obstacle recognition, obstacle avoidance, localisation, filtering, data smoothing, vision, swarm intelligence, grid world, DBSCAN, artificial neural network, multi-layer perceptron, robotics, mitecom}
 \end{abstract}
 %
 
@@ -501,7 +501,7 @@ These values still depend on the position on the robot, so at the end we have to
 \subsubsection{Grid World}
 Now that we know the positions of our own and other robots we need some way to save and share these positions, so that our team members can make use of that knowledge and every robot in our team can profit. We needed a representation of the field, so we could store and use the data we generated. For that purpose we use the grid world. Other approaches we considered were a coordinate system that uses millimetres and a tree based solution \cite{tree}. In the end we decided to use said grid world because of its simplicity and several advantages. Even though Daniel had the idea for that representation of the field it turns out we are not the first robocup-team to use it. \cite{grid} So we need to divide the field into a certain number of cells. As shown in figure~\ref{fig:gridworld} the origin of the cells is at the midpoint of the field.
 \begin{figure}
- 	\centerline{\includegraphics[width=1\textwidth]{gridworld.pdf}}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{gridworld.pdf}}
 	{\caption{The grid world divides the field into a certain amount of cells.}\label{fig:gridworld}}
 \end{figure}
 We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of our own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for both goals, it is easier to have the origin cell in the middle. 
@@ -565,10 +565,6 @@ Our solution is based on binary numbering system. Each of the 32 positons repres
 \\
 Besides, the binary integer can only depict one kind of information (numbers 1-7, see chaper Grid World) at a time. So we also need one integer per information type.
 \\
-\begin{figure}
- 	\centerline{\includegraphics[width=1\textwidth]{gridworld_MiteCom.pdf}}
-	{\caption{One integer represents one part of the field for a certain value.}\label{fig:gridworld}}
-\end{figure}
 When calculating these integers, the current part of the grid is scanned for the certain kind of information. When a gridcell with the certain number is found, the grid cells number becomes the exponent of 2 and the sum of all of them gives the 32bit integer, that is sent via MiteCom.
 \\
 When receiving data and updating the own Grid World, there is a hierarchy of persistence between opponent robots, team mates and the own position. 
@@ -584,7 +580,7 @@ However, when a team mate is added to the Grid World, the only value it cannot o
 %%%%%%%%%%%%%%%
 
 \section{Results}
-\subsection{localisation}
+\subsection{Localisation}
 Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Or one could coordinate which player should go to the goal depending on who has the shortest path. And there's a lot more potential for usages.
 \\
 Unfortunately we didn't have enough time to conduct our tests of the grid world to the end. So there are still some bugs. Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to benefit from it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
@@ -613,22 +609,12 @@ behaviour
 %%%%%%%%%%%%%%%
 
 \section{Summary}
+Although many of the modules can be improved and some failures still remain our software provides useful data. The vision produces more reliable data because of our implementation which searches for the bottom of an object. The DBSCAN algorithm and the afterwards calculated arithmetical mean supplies enhanced, filtered data in comparison to the raw data which makes positioning possible. The neural network additionally increased the accuracy of our filtered data and solved the calibration issues.
+\\
+The grid world module consumes this filtered data and processes the information to determine the robots position on the field. Once the robots position is found this enables us to deduce other object's positions (obstacles, enemies, team mates, ball, ...). This is the key for intelligent behaviour.
+\\
+The communication module provides each robot's information for the whole team and thus helps visionless robots to relocate. In addition it increases the average quality of information and makes team coordination possible.
 
-Be more informative than your abstract!
-
-Include a concise version of your discussion
-
-Highlight what you found out
-
-Highlight the problems you encountered
-
-Explain how your results support your conclusions!
-
-Provide suggestions for future research and briefly outline how
-suggested research can be attempted
-
-Important:
-Make this section readable
 
 
 
