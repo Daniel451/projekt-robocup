@@ -285,7 +285,8 @@ Those differences are too large to ensure a correct mapping in our grid world mo
 \\
 Nevertheless clusters of points can be detected in figure~\ref{fig:noise1} and this is the reason why we decided to filter the data via a DBSCAN algorithm.
 
-\subsubsection{DBSCAN} Our approach to reduce the noise on data was implementing a two dimensional version of the DBSCAN (density-based scanning) algorithm \cite{ester:kriegel}, which we slightly customized to our needs.
+\subsubsection{DBSCAN}
+Our approach to reduce the noise on data was implementing a two dimensional version of the DBSCAN (density-based scanning) algorithm \cite{ester:kriegel}, which we slightly customized to our needs.
 \\
 At first our code was an exact re-implementation in pure Python of the DBSCAN algorithm \cite{ester:kriegel}
 originally proposed by Martin Ester et al. in 1996 but this procedure was just for testing to assure the algorithm meets our requirements.
@@ -313,13 +314,52 @@ In figure~\ref{fig:dbscan_illustration1} a graphical illustration of the DBSCAN 
 	The minimum points parameter is set to $4$ in this example.}\label{fig:dbscan_illustration1}}
 \end{figure}
 
-The DBSCAN algorithm has two parameters: the minimum points $\kappa$ (in some papers referred only with "minimum points"), which are required to initialize a new cluster and the radius $\epsilon$ in which neighbour points should be searched.
+The DBSCAN algorithm has two parameters: the minimum points $\kappa$ (in some papers referred only with "minimum points"), which are required to initialize a new cluster and the radius $\epsilon$ in which neighbouring points should be searched.
 \\
-Throughout our testing process we experienced positive results with 6 minimum points and an epsilon of 50 as parameters for our DBSCAN implementation.
+The point counts itself to its neighbourhood, too. Therefore every point has a $\kappa$ of at least 1.
+\\
+All points are two-dimensional and consist of the relative horizontal distance ($u$) and the relative vertical distance ($v$) to the object.
+\\
+At first DBSCAN marks every point as "unvisited". In the next step the algorithm chooses one point $p_0$ at random, marks it as "visited" and searches in his neighbourhood for neighbouring points within its $\epsilon$ radius. This is done by calculating the euclidean distance between the points.
+\\
+This procedure would find all points within a circle with the radius of $\epsilon$ as shown in figure~\ref{fig:dbscan_illustration1}. If the amount of found neighbouring points in neighbourhood to $p_0$ is greater or equal to $\kappa$, than a new cluster is initialized. Otherwise the point is would be marked as "noise".
+\\
+A newly initialized cluster would then continue with the next point $p_1$ within the cluster and also mark it as visited as well as search for other neighbouring points in $p_1$'s $\epsilon$ neighbourhood. This continuation stops when all points in the cluster are processed, so the cluster is expanded to its maximum size like the green cluster in figure~\ref{fig:dbscan_illustration1}.
+\\
+Points within the cluster's range which do not fulfil the precondition of its neighbourhood being greater or equal than $\kappa$ are marked as "density-reachable" points. Those points are not part of the original cluster but in range so the point is considered to be better than pure noise because of a cluster being in its $\epsilon$ radius.
+\\
+This process loops through all data sets, finds the clusters and continues until every point is marked as "visited" and classified as either "core", "density-reachable" or "noise".
 
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{dbscan_data_plot1.pdf}}
-	{\caption{Plot of DBSCAN-filtered data}\label{fig:dbscan_plot1}}
+	{\caption{Plot of DBSCAN-filtered and averaged data. 100 data sets have been recorded in about 5 seconds. Original vertical distance (v) to the post was 2000mm and horizontal distance 1000mm. The robot was standing still.}\label{fig:dbscan_plot1}}
+\end{figure}
+
+Throughout our testing process we experienced positive results with a $\kappa$ of 6 and an $\epsilon$ of 50 as parameters for our DBSCAN implementation.
+\\
+After our DBSCAN has processed all data it returns the found clusters and density-reachable points. Those data is not directly returned to modules requesting filtered data.
+Before sending the filtered data our filter module calculates the arithmetical mean for every cluster plus density-reachable points.
+\\
+Figure~\ref{fig:dbscan_plot1} shows a dataset of 100 red unfiltered points and the filtered and averaged blue points. The euclidean distance between the filtered points is decreased heavily and outliers are reliably marked as noise and therefore not processed nor averaged.
+\\
+Nevertheless the goal post information may be sufficient for some purposes, but at least for the goal center calculation this is not sufficient. Due to calibration issues and the distribution of noise the goal center calculation would not be optimal then calculated out of this data directly.
+\\
+For this purpose, to further improve the stability and precision of goal center information, we implemented an artificial neural network.
+
+\subsubsection{Artificial Neural Network}
+For fixing the calibration issues and more accurate data our idea was to implement an artificial neural network (multi-layer perceptron design).
+\\
+The module is designed object oriented and caches every calculation to prevent from something being calculated twice. This, again, increases the space complexity but decreases the computing time and was simpler in cases of debugging, too.
+\\
+In addition to this the whole data (weights, bias, activations, outputs, ...) is stored in arrays of Numpy and always calculated with Numpy matrix operations or scalars to save as much computation time as possible.
+\\
+Furthermore the neural network is designed dynamically. All configurations are variably. At the moment our net has an input layer with 2 neurons, 2 hiddens layers with 10 and 5 neurons and an output layer with 2 output neurons. The learning rate $\epsilon$ is $0.2$ with $10.000$ learning steps.
+\\
+All this configurations can be changed instantly, for example a list of integers $[10, 5]$ represents the hidden layers at the moment and can be changed to $[20, 10, 5]$ which would create a net with 3 hidden layers with 20, 10 and 5 neurons per layer.
+
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{neuralnet1.pdf}}
+	{\caption{Plot of our Artificial Neural Network design (multi-layer perceptron).}\label{fig:neuralnet_illustration1}}
 \end{figure}
 
 
