@@ -23,6 +23,8 @@
 \usepackage{makeidx}  % allows for indexgeneration
 % \makeindex          % be prepared for an author index
 %
+\setlength{\textheight}{600pt}
+
 \begin{document}
 %
 \mainmatter              % start of the contribution
@@ -97,9 +99,9 @@ Playing football always requires communication, so sharing information improves 
 
 
 \subsection{Comments on group work \& split of labour}
-In this project we had a good cooperation and team work. Thus the results can not completely be split and allocated to a single person. We worked together as one team on most topics. Still we reflected our process and tried to name the main persons for each part, at least the one who wrote the chapter.
+In this project we had a good cooperation and team work. Thus the results can not completely be split and allocated to a single person. We worked together as one team on most topics. Still we reflected our process and name the main persons for each part.
 \\
-Thus it appeared, that the subjects "Vision" and "Filtering" primarily were done by Daniel Speck. It was his idea and together with Benjamin Scholz and Judith Hartfill he created a concept. The implementation on those topics was done by Daniel Speck.
+Thus it appeared that the subjects "Vision" and "Filtering" primarily were done by Daniel Speck. It was his idea and together with Benjamin Scholz and Judith Hartfill he created a concept. The implementation on those topics was done by Daniel Speck.
 \\
 Looking at the "Localisation" and "Communication" chapter, such a strict seperation is not possible anymore. Most of these two topics was done by Benjamin Scholz and Judith Hartfill.
 \\
@@ -108,7 +110,14 @@ The idea to create a Gridworld came from Daniel Speck, but the concept and the i
 The idea for the communication part came from Judith Hartfill. The concept and implementation of it was done by Judith Hartfill and Benjamin Scholz. 
 \\
 The testing and debugging for each of the topics was done jointly by all of us.
-
+\\
+In our paper the abstract, the first introduction part, the motivation and the summary were written as a team.
+\\
+The subtopics "Vision" and "Filtering" under the topics "Problems", "Solutions" and "Results" were written by Daniel Speck.
+\\
+The subtopic "Localisation" under the topics "Problems", "Solutions" and "Results" were written by Benjamin Scholz.
+\\
+The subtopic "Communication" under the topics "Problems", "Solutions" and "Results" were written by Judith Hartfill.
 
 
 
@@ -160,7 +169,7 @@ The whole topic of obstacle recognition relies on information which is extracted
 \\
 For our solutions primarily the goal post data and the later calculated goal centre information is important to calculate real, absolute coordinates for localisation purposes on the field out of the relative camera input.
 \\
-The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) oftenly showed a spreaded distribution of points in a circle with a radius of nearly half a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and higher.
+The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) oftenly showed a spreaded distribution of points in a circle with a radius of about a quarter of a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and higher.
 \\
 Having such noisy data renders absolute positioning tasks and intelligent obstacle recognition (avoidance in case of real obstacles, path planning in case of balls) impossible.
 \\
@@ -244,24 +253,25 @@ Those obstacles information is processed separately and can be filtered to stabi
 
 \subsubsection{Data noise}
 
-\begin{wrapfigure}{r}{0.6\textwidth}
-  \begin{center}
-    \includegraphics[width=0.58\textwidth]{noise_data_plot.pdf}
-  \end{center}
-  {\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
-  \label{fig:noise1}}
-\end{wrapfigure}
+%\begin{wrapfigure}{r}{0.6\textwidth}
+%  \begin{center}
+%    \includegraphics[width=0.58\textwidth]{noise_data_plot.pdf}
+%  \end{center}
+%  {\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
+%  \label{fig:noise1}}
+%\end{wrapfigure}
+
 The majority of the bitbots code works without filters on raw data, especially in the case of goal information no postprocessing exists.
 \\
 The goal information (goal post positions and goal center position) is needed to localise the robot on the field in our case. Intelligent behaviour according to obstacle recognition relies on this localisation (our grid world module) so the goal information is the most important data for our software and has to be as accurate as possible.
 
 
 
-%\begin{figure}
-% 	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
-%	{\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
-%	\label{fig:noise1}}
-%\end{figure}
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
+	{\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
+	\label{fig:noise1}}
+\end{figure}
 
 As shown by figure~\ref{fig:noise1} the noise of the raw data in combination with missing calibration is too high to allow an accurate localisation.
 \\
@@ -279,7 +289,7 @@ $\vec{d}_{0}$ to $\vec{d}_{2}$
 by $ 163 = \sqrt{(2000 - 1877)^2 + (0 - 107)^2}$
 in euclidean distance.
 \\
-Those differences are too large to ensure a correct mapping in our grid world module as the differences occurred in less than three seconds while the robot was standing still.
+Those differences are too large to ensure a correct mapping in our grid world module as the differences occurred in less than three seconds while the robot was standing still. In addition the vertical difference between $\vec{d}_{1}$ and $\vec{d}_{2}$ is $ 134 = |-27| + 107 = |-27| + |107|$. Recordings of several seconds show the mentioned noise distribution in a circle of about a quarter of a metre.
 \\
 Nevertheless clusters of points can be detected in figure~\ref{fig:noise1} and this is the reason why we decided to filter the data via a DBSCAN algorithm.
 
@@ -347,11 +357,11 @@ For this purpose, to further improve the stability and precision of goal center 
 \subsubsection{Artificial Neural Network}
 For fixing the calibration issues and more accurate data our idea was to implement an artificial neural network (multi-layer perceptron design).
 \\
-The module is designed object oriented and caches every calculation to prevent from something being calculated twice. This, again, increases the space complexity but decreases the computing time and was simpler in cases of debugging, too.
+The module is designed object oriented and caches every calculation to prevent something being calculated twice. This, again, increases the space complexity but decreases the computing time and was simpler in cases of debugging, too.
 \\
 In addition to this the whole data (weights, bias, activations, outputs, ...) is stored in arrays of Numpy and always calculated with Numpy matrix operations or scalars to save as much computation time as possible.
 \\
-Furthermore the neural network is designed dynamically. All configurations are variably. At the moment our net has an input layer with 2 neurons, 2 hiddens layers with 10 and 5 neurons and an output layer with 2 output neurons. The learning rate $\epsilon$ is $0.2$ with $10.000$ learning steps.
+Furthermore the neural network is designed dynamically. All configurations are variably. At the moment our network has an input layer with 2 neurons, 2 hidden layers with 10 and 5 neurons and an output layer with 2 output neurons. The learning rate $\epsilon$ is $0.2$ with $20,000$ learning steps and $1,000$ training data sets.
 \\
 All this configurations can be changed instantly, for example a list of integers $[10, 5]$ represents the hidden layers at the moment and can be changed to $[20, 10, 5]$ which would create a net with 3 hidden layers with 20, 10 and 5 neurons per layer.
 
