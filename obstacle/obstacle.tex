@@ -218,7 +218,7 @@ Avoid the passive voice: Y was done by X, use the active voice: X did Y
 \subsection{Vision}
 The visions detection of obstacles and objects is based on a horizon scanning algorithm which tries to find the horizon in the current frame. Basically it reads the pixel information of the current frame in matrix and finds the specific row where the horizon is located.
 Once this row is found the algorithm for obstacle detection scans down to find "green" pixels for locating the field. Every obstacle, for example the goal posts, create non-green shapes in this matrix.
-\\
+
 \subsubsection{Goal information}
 The algorithm searches for the yellow color mask of the goal posts to detect every goal post in the current frame. For every potential goal post which is found the algorithm tries to extrapolate the shape of the goal post and to fit a virtual rectangle with nearly the same dimensions on it.
 \\
