@@ -533,19 +533,24 @@ However, when a team mate is added to the Grid World, the only value it cannot o
 %%%%%%%%%%%%%%%
 
 \section{Results}
+\subsection{localisation}
+Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Or one could coordinate which player should go to the goal depending on who has the shortest path. And there's a lot more potential for usages.
+\\
+Unfortunately we didn't have enough time to conduct our tests of the grid world to the end. So there are still some bugs. Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to benefit from it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
+\\
+So there is still a lot of room for improvements, but this was something we expected at the start of the project. It's unfortunate that there wasn't more time to test our localisation and fix the rest of the bugs, but apart from this we are satisfied with the resulting localisation.
 \subsection{Communication}
-For the communication part it can be said, that the basis for a lot of further work is done. At the moment sharing information on localisation increases the quality and quantity of every single robot and thus of the whole team. The error rate is being reduced and so the information becomes more reliable. It is hard to quantify the advantege, but the next competition will hopefully give the answer. At least it will be very hard for the robots trying to score on their own gowl.
+For the communication part it can be said, that the basis for a lot of further work is done. At the moment sharing information on localisation increases the quality and quantity of every single robot and thus of the whole team. The error rate is being reduced and so the information becomes more reliable. It is hard to quantify the advantage, but the next competition will hopefully give the answer. At least it will be very hard for the robots trying to score on their own goal.
 \\
-Something that needs to developed in further work is the question of data integration. Our solution with the very simple overwriting hierarchy between opponents, team mates and the robots own position is good enough for the beginning of development is this area, but soon will come to its limitations, especially when there are several robots standing close to each other. In this situation our assumption of a robot moving one cell per iteration would be wrong, because it was not a movement of one robot, but really two robots standing close to each other. So opponent robots could be deletet. 
+Something that needs to developed in further work is the question of data integration. Our solution with the very simple overwriting hierarchy between opponents, team mates and the robots own position is good enough for the beginning of development is this area, but soon will come to its limitations, especially when there are several robots standing close to each other. In this situation our assumption of a robot moving one cell per iteration would be wrong, because it was not a movement of one robot, but really two robots standing close to each other. So opponent robots could be deleted. 
 \\
-One idea to avoid this to happen might be, to have a minimum and maximum amount of team mates and opponents and a ratign for each of them. When there are too many, only the best ones are taken and only the worst one can be deleted.
+One idea to avoid this to happen might be, to have a minimum and maximum amount of team mates and opponents and a rating for each of them. When there are too many, only the best ones are taken and only the worst one can be deleted.
 \\
-In general it should be thought about an algorithms that take the last \textit{n} received gridworlds and weights them before the own gridworld is updated.  Depending on the quality of WIFI (the last \textit{n} gridworlds, but not older then \textit{m} seconds), the information could be averaged or even more filtered (like taking the median). 
+In general it should be thought about an algorithms that take the last \textit{n} received grid worlds and weights them before the own grid world is updated.  Depending on the quality of WIFI (the last \textit{n} grid worlds, but not older then \textit{m} seconds), the information could be averaged or even more filtered (like taking the median). 
 \\
-Or the robots could use an internal rating system for the incoming data. One heuristic might depend on prioring the goalie, as it often stands still, has a good view over the field and does not move too much. This makes his information more reliable then the other robots information. 
-
-
-But all of these ideas could not have been part of this project due to the limited time. In the future the our results seems to bring a big effort for the team and surely will be extended furtherly.
+Or the robots could use an internal rating system for the incoming data. One heuristic might depend on prioritising the goalie, as it often stands still, has a good view over the field and does not move too much. This makes his information more reliable then the other robots information. 
+\\
+But all of these ideas could not have been part of this project due to the limited time. In the future the our results seems to bring a big effort for the team and surely will be extended further.
 our results
 behaviour
 
