@@ -253,7 +253,11 @@ Those obstacles information is processed separately and can be filtered to stabi
 \subsection{Filtering}
 
 \subsubsection{Data noise}
-The majority of the bitbots code works without filters on raw data, especially in the case of goal information, which is needed to localise the robot on the field in our case, no data postprocessing exists.
+The majority of the bitbots code works without filters on raw data, especially in the case of goal information no postprocessing exists.
+\\
+The goal information (goal post positions and goal center position) is needed to localise the robot on the field in our case. Intelligent behaviour according to obstacle recognition relies on this localisation (our grid world module) so the goal information is the most important data for our software and has to be as accurate as possible.
+\\
+
 
 \subsubsection{DBSCAN} Our approach to reduce the noise on data was implementing a two dimensional version of the DBSCAN (density-based scanning) algorithm \cite{ester:kriegel}, which we slightly customized to our needs.
 \\
