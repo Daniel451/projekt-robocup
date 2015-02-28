@@ -94,15 +94,15 @@ Playing football always requires communication, so sharing information improves 
 
 
 
-%%%%%%%%%%%%%%%%%%
-%%%            %%%
-%%% Motivation %%%
-%%%            %%%
-%%%%%%%%%%%%%%%%%%
+
 
 \subsection{Comments on group work \& split of labour}
-
-
+In this project, we had a very good cooperation and team work. Thus the results can not completely be splittet and allocated to every person, but we worked together as one team on most topics. Still we reflected our process and tried to name the main persons for each part, at least the one who wrote the chapter.
+Thus it appeared, that the subjects "Vision" and "Filtering" primarily were done by Daniel Speck. It was his idea and together with Benjamin Scholz and Judith Hartfill he created a concept. The implementation was done by Daniel Speck.
+Looking at the "Localisation" and "Communication" chapter, such a strict seperation is not possible anymore. Most of these two topics was done by Benjamin Scholz and Judith Hartfill.
+The idea to create a Gridworld came from Daniel Speck, but the concept and the implementation was done by Benjamin Scholz and Judith Hartfill.
+The idea for the communication part came from Judith Hartfill. The concept and implementation of it was done by Judith Hartfill and Benjamin Scholz. 
+The testing and debug for each of the topics was done jointly by all of us.
 
 
 
@@ -174,7 +174,13 @@ To achieve these goals we need a world model we can store information in, like o
 
 
 \subsubsection{Communication}
-When thinking about how to achieve most and best information for the robot, we thought about swarm intelligence mechanisms. Althought our Darwin-OP platfors do have a lot more computing capacity then usual swarm intelligent bots have, we still can benefit from researches in this part of robotics. particularly as communicating is a very important part in "real" human soccer.
+When thinking about how to achieve most and best information for each robot, we thought about swarm intelligence mechanisms. Althought the Darwin-OP platfors that we use do have a lot more computing capacity then usual swarm intelligent bots have, we still can benefit from researches in this part of robotics. 
+\\
+Particularly as communicating, which is the basis for any smar intelligance, is a very important part in "real" human soccer, extending this aspect makes robot soccer even more humanoid, althoug WIFI is a very unnatural (nevertheless not unhumanoid) way to communicate. In the future communicating vis WIFI is goig to be substituted by communicating via natural speech and speech comprehension, but getting startet with this slighly simplier form is very important for the development.
+\\
+Until then, the robots only shared their own relative position to ball with each other. This was used to offset the lack of real localisation, especially the problem of symmetry. When a striker went towards the own goal with a ball, thinking it was te opponent goal, his own goalie would also see the ball and in return send its relative position to the ball. In case the distance between goalie and ball was less then half the field length, the striker could be quite sure to be playing onto its own goal and turned around. 
+\\
+But to use the whole capability of communication, shared information and thus interaction, we need a way to decode and encode information and to itegrade received data with own data.
 
 
 
@@ -490,17 +496,35 @@ This is one of the advantages of this representation of the field. The inaccurac
 %%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Communication}
-Communication has always been one of the most important fields of resaerch in RoboCup, at least it was the may reason to found the instituition to find out whether two or more robots might posibilly be able to act together in a sensful way. 
-Due to the increasing number of robots one team is allowed to have on the field ( up two eleven in 2050, as the roadmap plans) and the high costs for one robot it will become more and more necessary to cooperate with other teams. When there were the first tries of mixed teams some years ago, it was very fast obvious, that robots from different teams will have to communicate with each other.
-So some years ago, a RoboCup Soccer Humanoid Kid Size team implemented a WiFi communication standart, the so calles MiteCom,  that is used by a lot of taems in this league and makes it very easy to to play in one team with robots from different teams.
-This standart already was used in our team for very simple behaviour. for example because of the lack of localisation, it was not possile for a fiel player to determine whether a goal was the opposite goal or his own goal. So the goalie could send information like "The ball is very close to me" and thus make the field player stop playing on that goal, but turning around and trying the ohter goal. But this was a very unsecure mechanism, because the WiFi on competitions has a very high package loss and is very unreliable. 
-So our idea was, that every robot could provide its own gridworld and in return receive every other robots gridworlds. By weighting the incoming data due to reliability (like taking the median for each position of ten or so incoming grids) or actuality (I did not see a goal for a long time, dont know whether my own position is right or not, i will take a new grid and search a goal) the average information quantity and quality could increase a lot.
+Communication has always been one of the most important fields of research in RoboCup, at least it was the main reason to found the instituition to find out whether two or more robots might posibilly be able to act together in a sensful way. 
+\\
+Due to the increasing number of robots one team is allowed to have on the field (up two eleven in 2050, as the roadmap plans) and the high costs for one robot, it will become more and more necessary to cooperate with other teams. When there were the first tries of mixed teams some years ago, it was very fast obvious, that robots from different teams will have to communicate with each other.
+\\
+So some years ago, a RoboCup Soccer Humanoid Kid Size team implemented a WiFi communication standart, the so calles MiteCom,  that is used by a lot of taems in this league and makes it very easy to play in one team with robots from different teams. 
+\\
+So our idea was, that every robot could provide its own gridworld and in return receive every other robots gridworlds. By weighting the incoming data due to reliability (like taking the median for each position of \textit{n} incoming grids) or currency ("I did not see a goal for a long time, i don' t know whether my own position is right or not, i will take a new grid and search for a goal") the average information quantity and quality could increase a lot.
+\\
 But our a big problem was, that via MiteCom it is only possible to send 32 bit integer values. Foremost we thought about implementing our own standart, but when thinking about it a secound time, it seemed a good idea to use it. First of all, because of the aspect of universality mentioned above, that will be needed in the future. But forthermore it is not a bad idea to only send integers. 
+\\
 As already mentioned, on competitions the quality of WIFI is not very hight. So the big package loss could cause incompletely received data, and so only sending "small" 32bit integers is more practicable. 
-So the problem appeard, how to encode our dictonary, that represents the grid world into an integer.
-Our solution is based on binar numbering system. Each of the 32 positons represents one cell in the grid world. But dividing the hole $54m^2$ field in only 32 cells seemed very few. So we use 8 integers, each representing one eighth of the field.
-Besides, the binary integer can only depict one kind of information (numbers 1-6, see Gridworld) at a time. So we also need one integer per information type.
-When calculating these integers, the current part of the grid is scanned for the certain kind of information. When a gridcell is found, the gris cells number becomes the exponent of 2 andthe sum of all of them gives the 32bit integer, that is thent via MiteCom.
+\\
+The problem appeard, how to encode the dictonary, that represents the Grid World, into an integer.
+\\
+Our solution is based on binary numbering system. Each of the 32 positons represents one cell in the Grid World. But dividing the hole $54m^2$ field in only 32 cells seemed very few. So we decided to use eight integers, each representing one eighth of the field.
+\\
+Besides, the binary integer can only depict one kind of information (numbers 1-7, see chaper Grid World) at a time. So we also need one integer per information type.
+\\
+\begin{figure}
+ 	\centerline{\includegraphics[width=1\textwidth]{gridworld_MiteCom.pdf}}
+	{\caption{One integer represents one part of the field for a certain value.}\label{fig:gridworld}}
+\end{figure}
+When calculating these integers, the current part of the grid is scanned for the certain kind of information. When a gridcell with the certain number is found, the grid cells number becomes the exponent of 2 and the sum of all of them gives the 32bit integer, that is sent via MiteCom.
+\\
+When receiving data and updating the own Grid World, there is a hierarchy of persistence between opponent robots, team mates and the own position. 
+\\
+A new opponent robot is only written into the Grid World, when its position is not occupied with a team mate or the robots own position. After it is written into the Grid World, it is checked, whether it is a "new" opponent or it only has moved. To do so, the 8 surrounding cells are searched for opponent robots. We assume, that a robot would only move one cells per iteration. So if there was one in the surrounding cells before, it has moved to the new cell now and the old cell will be set to 0 (empty) again.
+\\
+However, when a team mate is added to the Grid World, the only value it cannot overwrite is the robots own position.
 
 %%%%%%%%%%%%%%%
 %%%         %%%
@@ -509,6 +533,21 @@ When calculating these integers, the current part of the grid is scanned for the
 %%%%%%%%%%%%%%%
 
 \section{Results}
+\subsection{Communication}
+For the communication part it can be said, that the basis for a lot of further work is done. At the moment sharing information on localisation increases the quality and quantity of every single robot and thus of the whole team. The error rate is being reduced and so the information becomes more reliable. It is hard to quantify the advantege, but the next competition will hopefully give the answer. At least it will be very hard for the robots trying to score on their own gowl.
+\\
+Something that needs to developed in further work is the question of data integration. Our solution with the very simple overwriting hierarchy between opponents, team mates and the robots own position is good enough for the beginning of development is this area, but soon will come to its limitations, especially when there are several robots standing close to each other. In this situation our assumption of a robot moving one cell per iteration would be wrong, because it was not a movement of one robot, but really two robots standing close to each other. So opponent robots could be deletet. 
+\\
+One idea to avoid this to happen might be, to have a minimum and maximum amount of team mates and opponents and a ratign for each of them. When there are too many, only the best ones are taken and only the worst one can be deleted.
+\\
+In general it should be thought about an algorithms that take the last \textit{n} received gridworlds and weights them before the own gridworld is updated.  Depending on the quality of WIFI (the last \textit{n} gridworlds, but not older then \textit{m} seconds), the information could be averaged or even more filtered (like taking the median). 
+\\
+Or the robots could use an internal rating system for the incoming data. One heuristic might depend on prioring the goalie, as it often stands still, has a good view over the field and does not move too much. This makes his information more reliable then the other robots information. 
+
+
+But all of these ideas could not have been part of this project due to the limited time. In the future the our results seems to bring a big effort for the team and surely will be extended furtherly.
+our results
+behaviour
 
 Present your results in a logical sequence
 
