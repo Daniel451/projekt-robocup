@@ -164,7 +164,14 @@ Since the robots do not have auto-calibration features the calibration of the ca
 In addition to that the manual calibration is expansive in terms of time.
 
 \subsubsection{Localisation}
-seeing an obsacle and seeing the goal does not help much increasign the behaviour, if there is no way to know were they are in relation to the robot. but this requires a system, that provides the robots own position. so we developed a world model, that fits our needs and posibilities and should also be expandable for longtime usage. A special problrm here was, that the soccer field, like in human soccer, too, is axial symmetric. this makes localisation even harder then in ususal mobile robot environments
+Detecting an obstacle isn't worth much without knowing our own robot's position on the field. Of course the robot could avoid the recognised obstacle, but there is no way of knowing if it benefits our team in this situation. If the robot bypasses an opponent but actually walks in the wrong direction we haven't gained anything. 
+\\
+Also there is no way of knowing what robots are our team members and which one are our opponents.
+\\
+If the robot had all this data it could make more intelligent decisions and improve the flow of play.
+\\
+To achieve these goals we need a world model we can store information in, like our own position and the position of our team members and opponents.
+
 
 \subsubsection{Communication}
 When thinking about how to achieve most and best information for the robot, we thought about swarm intelligence mechanisms. Althought our Darwin-OP platfors do have a lot more computing capacity then usual swarm intelligent bots have, we still can benefit from researches in this part of robotics. particularly as communicating is a very important part in "real" human soccer.
@@ -291,73 +298,85 @@ Throughout our testing process we experienced positive results with 6 minimum po
 \subsection{Localisation}
 
 \subsubsection{Calculating our robot's position}
-We didn't have a lot of data to work with. The only data that we could use were the distances to the goal and to the goalposts. There is a lot of other data: like already mentioned the distance to obstacles or other players on the field and the distance to the ball. But the problem with those is that they are not a fixed point on the field. They will change their position and that means they are not suitable to calculate our own position. 
+The robot provides a lot of different data.
+But unfortunately a most of the values are not fixed points on the field and so they are unsuitable to calculate the robot's position. From the data given by the robot only the distances to the goal posts are sufficient for our purposes.
 \\
-The data we actually have is not the direct distance but only the distance in front of the robot and the distance to the left of the robot. We will call the distance in front of the robot u and to the left of him v to stay consistent with the terms used in the code. figure~\ref{fig:uvvalues} contains an example of these values.
+But the information the robot actually provides is not the direct distance but only the distance in front of the robot and the distance to the left of the robot to the objects. We will call the distance in front of the robot u and to the left of it v to stay consistent with the terms used in the code. figure~\ref{fig:uvvalues} contains an example of these values.
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{uvvalues.pdf}}
-	{\caption{The grid world divides the field into a certain amount of cells.}\label{fig:uvvalues}}
+	{\caption{Example of u- and v-values.}\label{fig:uvvalues}}
 \end{figure}
 \\
-At first we want to outline how we basically calculated the position of our own robots and afterwards we are going to explain all steps in detail.\\
-For this calculation we used the u- and v-values to two goal posts. With these values we can calculate the direct distances to the goal and we get two lines that intersect exactly at the robot's location. So what we need to do is calculate the slope of the two lines so that we can form equations for them. Once we have these equations we can calculate the point of intersection and we will know the robot's position on the field.
+At first we want to outline how we basically calculated the position of our own robots and afterwards we are going to explain all steps in detail.
 \\
-We are going to call the u- and v-values for the left post \(u_{1}\) and \(v_{1}\), and for the right post \(u_{2}\) and \(v_{2}\). With the u- and v-values it's easy to calculate the direct distance to the goal. You can use Pythagora's theorem to do that: 
+For this calculation we used the u- and v-values to two goal posts. We use these values to calculate the direct distances to the goal and get two lines that intersect exactly at the robot's location. For this reason it's necessary to calculate the slope of the two lines so that we can form equations for them. With these we can determine the point of intersection. And once we know the point of intersection we also know the robot's position.
+\\
+We are going to call the u- and v-values for the left post \(u_{1}\) and \(v_{1}\), and for the right post \(u_{2}\) and \(v_{2}\). You can use Pythagora's theorem to calculate the direct distances to the goal posts as done in equation~\ref{equ:distance}.
 \begin{equation}
 	d = \sqrt{u^2+v^2}
+	\label{equ:distance}
 \end{equation}
-We do that for both goal posts and we are going to call the distance to the left post \(d_{1}\) and to the right post \(d_{2}\). Because we want to know the angle between these lines and the goal width we need to know this value as well. The goal width doesn't change and we can retrieve it in the code, but the robot's goal post recognition can be very inaccurate. Meaning even though in reallity the goal width is always the same, according to the robot's values the goal width is changing all the time. So the robot calculates it's own value for the goal width too. We use the u- and v-values to create vectors and calculate a vector between the two goal posts:
+We do that for both goal posts and we are going to call the distance to the left post \(d_{1}\) and to the right post \(d_{2}\). We want to know the angle between these lines and the goal width \(\psi\) so we need to know this value as well. The goal width doesn't change and we can retrieve it in the code, but the robot's goal post recognition can be very inaccurate. Meaning even though in reality the goal width is always the same, according to the robot's values the goal width is changing all the time. So the robot calculates it's own value for the goal width too. We use the u- and v-values to create vectors and calculate a vector between the two goal posts:
 \begin{equation}
 	\vec{gw}=\left(\begin{array}{c} u_{1} \\ v_{1} \end{array}\right) - \left(\begin{array}{c} u_{2} \\ v_{2} \end{array}\right)
 \end{equation}
-The absolute value of \(gw\) is the goal width.
+The absolute value of \(gw\) is the goal width \(\psi\).
 \\
-Now that we have these three values we can form a triangle like in figure~\ref{fig:triangle}.
+Now that we computed these three values we can form a triangle like in figure~\ref{fig:triangle}.
 \begin{figure}
  	\centerline{\includegraphics[width=0.6\textwidth]{triangle.pdf}}
 	{\caption{}\label{fig:triangle}}
 \end{figure}
 \\
-With the help of that triangle we are going to calculate the point of intersection of \(d_{1}\) and \(d_{2}\). Let's assume that we have a coordinate system and the point of origin is at the middle of the field. The reason for that is that the origin of our grid world, that is used to save the data, is in the middle of the field too. That means it's easier to translate the position found in that coordinate system to the grid world. But we will explain that in the next section. Otherwise it would have been easier to have the origin in the middle of the goal the robot is facing to. To calculate the point of intersection we need to know the slope of both lines. We calculate the two angles shown in figure~\ref{fig:triangle}.
+With the help of that triangle we are going to calculate the point of intersection of \(d_{1}\) and \(d_{2}\). Let's assume we have a coordinate system and the point of origin is at the middle of the field. The reason for that is that the origin of our grid world, that is used to save the data, is in the middle of the field too. That means it's easier to translate the position found in that coordinate system to the grid world. But we will explain that in the next section. Otherwise it would have been easier to have the origin in the middle of the goal the robot is facing to.
+\\ 
+To calculate the point of intersection we need to form two equations for \(d_{1}\) and \(d_{2}\). In order to do that it's necessary to know the slope of both lines. 
+\\
+We calculate the two angles shown in figure~\ref{fig:triangle}.
 The formula we used is the following:
 \begin{equation}
 	\alpha = \arccos{(\frac{a^2-b^2-c^2}{-2bc})}
+	\label{equ:angle1}
 \end{equation}
 \\
 Specifically these are the two formulas if you want to calculate the angle of the left post and the right post in the triangle:
 \\
 \begin{equation}
-	angleleft = \arccos{\frac{(d_{1}^2 - d_{2}^2 - goalwidth^2)}{(-2*d_{2}*goalwidth)}}
+	angleleft = \arccos{\frac{(d_{1}^2 - d_{2}^2 - \psi^2)}{(-2*d_{2}*\psi)}}
 	\label{equ:angleleft}
 \end{equation}
 
 \begin{equation}\
-	angleright = \arccos{\frac{(d_{2}^2 - d_{1}^2 - goalwidth^2)}{(-2*d_{1}*goalwidth)}}
+	angleright = \arccos{\frac{(d_{2}^2 - d_{1}^2 - \psi^2)}{(-2*d_{1}*\psi)}}
 	\label{equ:angleright}
 \end{equation}
 \\
-Now we know the two angles in the triangle. To convert the angles to the slopes in the coordinate system we can do the following:\\
+To convert the angles to the slopes of the two lines in the coordinate system, we can do the following:\\
 \begin{equation}
-	slopeleft = \frac{1}{\tan{angleleft}}
-	\label{equ:slopeleft}
+	sloperight = \frac{1}{\tan{angleright}}
+	\label{equ:sloperight}
 \end{equation}
 
-On the right side we don't need the angle itself but 180 minus the angle:
+On the left side we don't need the angle itself but 180 minus the angle:
 \begin{equation}
-	sloperight = \frac{1}{\tan{180 - angleright}}
-	\label{equ:sloperight}
+	slopeleft = \frac{1}{\tan{(180\degree - angleleft)}}
+	\label{equ:slopeleft}
 \end{equation}
 Because we want to know the point of intersection of these two lines we need an equation for them:
 \begin{equation}
 	y_{1} = slopeleft * x + b_{1}
+	\label{equ:y1}
 \end{equation}
 \begin{equation}
 	y_{2} = sloperight * x + b_{2}
+	\label{equ:y2}
 \end{equation}
-\(b_{1}\) and \(b_{2}\) are the points of intersection with the y-axis. Our coordinate system has it's point of origin at the middle point of the field. The reason for that is that the origin of our grid world is at that point as well. So converting the values is a lot easier. The unit of the point of intersection is now milimeter, but we convert these values to enter the robot's position into our grid world.
+\(b_{1}\) and \(b_{2}\) are the points of intersection with the y-axis. Our coordinate system has it's point of origin at the middle point of the field. The reason for that is that the origin of our grid world is at that point as well. So converting the values is a lot easier. The unit of the point of intersection is now millimetre, but we convert these values to enter the robot's position into our grid world. 
+\\
+We know the x- and y-values at the points of the goal posts. It is half the field length for both x-values and half the goal width for \(y_{1}\) and minus half the goal width for \(y_{2}\). With these points we can determine the values for \(b_{1}\) and \(b_{2}\) by rearranging the formulas. Afterwards we equate the equations ~\ref{equ:y1} and ~\ref{equ:y2} and solve this new equation for x. Then we can enter the found x-value in one of the two formulas to determine y. The found x- and y-value is the position of the robot in the coordinate system.
 \\
 \\
-Now the robot knows it's own position. But it can't determine the opponent's position on the field yet, because it doesn't know which direction it faces. The robot has his own inner coordinate-system. 0,0 is the middle of the robot. The y-, and x-axis depend on the direction the robot faces.\\
+Now the robot knows it's own position. But it can't determine the opponent's position on the field yet, because it doesn't know which direction it faces. The robot has its own inner coordinate-system. 0,0 is the middle of the robot. The orientation of the y-, and x-axis depend on the direction the robot faces.\\
 So at first we calculate how many degrees the robot would have to turn to face one of the two goal posts. If the robot turns to that angle and would walk directly to the goal post he would end up directly in front of it, but not looking directly at it. To achieve that we need another angle. Now if the robot would turn that angle he would look directly at the goal post. So all we need to do at the end is, according to the exact situation at hand, either add or subtract the two angles we calculated and we would know the angle to the x-axis.
 In figure~\ref{fig:angles} the first angle we mentioned is \(\beta_{2}\) and the second one is newangleright.
 \begin{figure}
@@ -374,14 +393,34 @@ This only works if the old angle is under 90 degree, but this is always true for
 Now there are different cases which affect how exactly we calculate the angle to the grid. At first we check if u1 or u2 is bigger. In our example we face the opponents goal. If u1 is bigger that means that the robot faces to the left and that the angle is bigger than 180\degree. In that case we have to add 180\degree and in the other case we have subtract from 180\degree. It also determines if we take angle\_right\_new or angle\_left\_new depending on the side the robot is facing. Meaning if u1 is bigger we use angle\_left\_new and if u2 is bigger we use angle\_right\_new.
 \\
 The v-values are also important. With these values we can determine if the triangle of the u- and v-values is inside or outside the triangle of the two goal posts.
-So depending on that we need to either add beta and angle\_new or subtract beta from angle\_new. This all boils down to these lines in our code:
-\\
-lines grafik
+So depending on that we need to either add beta and angle\_new or subtract beta from angle\_new. 
 \\
 So now that we know the position of the robots and their orientation we can finally calculate the position of other robots on the field.
 
 \subsubsection{Calculating other robot's positions}
-
+When our robot sees another robot it gets it's distance as u- and v-values. Once again we can calculate the direct distance by using equation~\ref{equ:distance}. We want to use polar coordinates to calculate the position of the other robots. These consist of the direct distance \(r\) to the object and the polar angle \(\phi\), which is the angle between r and the x-axis of the grid in our case. In order to calculate \(\phi\) we need to know the angle from u to r. We use equation~\ref{equ:angle1} for this purpose, and substitute u for a, v for b and r for c. 
+\\
+We already determined the angle from the direction the robot is facing to the grid.
+\\
+To finally get the angle from the object to the grid we have to either add or subtract these two angles depending if the robot is left or right of the object, meaning if the v-value is positive or negative. So depending on the circumstances we use either equation~\ref{equ:a1} or equation~\ref{equ:a2}.
+\begin{equation}
+	\phi = (angle\_robot\_to\_grid - angle\_robot\_to\_object) \% 360
+	\label{equ:a1}
+\end{equation}
+\begin{equation}
+	\phi = (angle\_robot\_to\_grid + angle\_robot\_to\_object) \% 360
+	\label{equ:a2}
+\end{equation}
+Afterwards we use equation~\ref{equ:x} and~\ref{equ:y} to determine the x- and y-values.
+\begin{equation}
+	x = r*\cos(\phi)
+	\label{equ:x}
+\end{equation}
+\begin{equation}
+	y = r*\sin(\phi)
+	\label{equ:y}
+\end{equation}
+These values still depend on the position on the robot, so at the end we have to add the position of the robot to the found values to finally get the position of the other robot on the field.
 
 %%%%%%%%%%%%%%%%%%
 %%%            %%%
@@ -390,13 +429,27 @@ So now that we know the position of the robots and their orientation we can fina
 %%%%%%%%%%%%%%%%%%
 
 \subsubsection{Grid World}
-Now that we know the positions of our own robots we need some way to share these positions, so that our team mates can use that knowledge and every robot in our team can profit. For that purpose we use the grid world. We needed a representation of the field, so we could store and use the data we generated. There are different approaches for that. Other approaches that we considered were a coordinate system that uses millimetres and tree based solution. In the end we decided to use said grid world. Even though Daniel had the idea for that representation of the field it turns out we are not the first robocup-team to use it. \cite{} So we need to divide the field into a certain number of cells. As shown in figure~\ref{fig:gridworld} the origin of the cells is at the midpoint of the field.
+Now that we know the positions of our own robots we need some way to share these positions, so that our team members can make use of that knowledge and every robot in our team can profit. For that purpose we use the grid world. We needed a representation of the field, so we could store and use the data we generated. There are different approaches for that. Other approaches we considered were a coordinate system that uses millimetres and a tree based solution \cite{tree}. In the end we decided to use said grid world. This representation has several advantages. Even though Daniel had the idea for that representation of the field it turns out we are not the first robocup-team to use it. \cite{grid} So we need to divide the field into a certain number of cells. As shown in figure~\ref{fig:gridworld} the origin of the cells is at the midpoint of the field.
 \begin{figure}
  	\centerline{\includegraphics[width=1\textwidth]{gridworld.pdf}}
 	{\caption{The grid world divides the field into a certain amount of cells.}\label{fig:gridworld}}
 \end{figure}
-We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of our own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for the opponents goal too, it is easier to have the origin cell in the middle. There is also a difference between choosing an even number and uneven number respectively on the x and the y direction. We decided to choose an uneven number for both, which means the origin cell is now in the middle of the centre spot. One benefit of that is that there is a cell that is in the middle of the goal where the goalie can stand. When we take the cell at position (0,0) for example and we compare it to a coordinate system, then the upper right edge of that cell would be at (0.5, 0.5) in the coordinate system. When we calculate positions we don't get integers but decimal digits. So if it is over 0.5 instead of the cell with the 0 position we will put it in the cell with the position 1. 
-For that purpose we used a dictionary in Python. The indexes of the dictionary are the positions in the grid world. For example (0, 0) would be the center of the field. Then we use numbers to fill that dictionary. At initialization the dictionary will be filled with zeroes, which is representing that there is nothing at that particular position. Here is a quick overview of the numbers we fill the dictionary with and what they represent:\\
+We had different iterations of the grid world with different origins. At first the origin cell was in the lower left corner. Then we decided it would be better if the origin cell were in the middle of our own goal, mostly because it made calculations needed to determine the position of the robots easier. But if we wanted to use these calculations for both goals, it is easier to have the origin cell in the middle. There is also a difference between choosing an even number and uneven number respectively on the x and the y direction. We decided to choose an uneven number for both, which means the origin cell is now in the middle of the centre spot. One benefit of that is that there is a cell that is exactly in the middle of the goal where the goalie stands most of the time. 
+\\
+Also when we take the cell at position (0,0) for example and we compare it to a similar coordinate system, then the upper right edge of that cell would be at (0.5, 0.5) in the coordinate system. When we calculate positions we don't get integers but decimal digits. 
+So when we determine a robot's position on the field, we can simply round that result and know into what cell we have to put it.
+\\
+We explained earlier how to calculate the robot's position, but all the results were in millimetre. To convert these values into a cell one can use equations~\ref{equ:xcell} and~\ref{equ:ycell}.
+\begin{equation}
+	x\_cell = \frac{x\_mm}{field\_length} * x\_cell\_count
+	\label{equ:xcell}
+\end{equation}
+\begin{equation}
+	y\_cell = \frac{y\_mm}{field\_width} * y\_cell\_count
+	\label{equ:ycell}
+\end{equation}
+\\
+To store the data we use a dictionary in Python. The indexes of the dictionary are the positions in the grid world. For example (0,0) would be the centre of the field. Then we use numbers to fill that dictionary. At initialization the dictionary will be filled with zeroes, which is representing that there is nothing at that particular position. Here is a quick overview of the numbers we fill the dictionary with and what they represent:\\
 0: nothing\\
 1: own goal\\
 2: enemy goal\\
@@ -404,12 +457,13 @@ For that purpose we used a dictionary in Python. The indexes of the dictionary a
 4: team mate\\
 5: opponent\\
 6: unclassified obstacle\\
+7: ball\\
 \\
-So if we want to know the state of a certain position we call that dictionary with that position and get back a number between 0 and 6.
+So if we want to know the state of a certain position we call that dictionary with that position and get back a number between 0 and 7.
 \\
-Every robot can determine their own position themselves. The position of the team mates is shared over the wifi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team mates the robots can compare the position of the robots they see with the position of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. Another problem is to keep the map up-to-date. We send the whole map over the wifi, so it would be possible to check if there still is a robot on a certain position when the robot looks in that direction. Another solution would be to delete the positions of the opponents after a certain amount of time. There is the same problem with team mates. Currently we don't send which team mate shares the position, but that would be one solution. Whenever a team mate shares their new position a the receiving robot could delete the old position.
+Every robot can determine their own position themselves. The position of the team members is shared over the wifi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team members the robots can compare the position of the robots they see with the position of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. 
 \\
-
+Another problem is to keep the map up-to-date. We send the whole map over the wifi, so it would be possible to check if there still is a robot on a certain position when the robot looks in that direction. Another solution would be to delete the positions of the opponents after a certain amount of time.
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -552,6 +606,12 @@ Sect.~5.2 of this article.
 A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise.
 In: Proceedings of 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96),
 pp. 226--231. AAAI Press, Munich (1996)
+
+\bibitem{grid} Salehi, M.E., Safdari, R., Abedi, E., Foroughi, B., Salimi, A., Farokhi, E., Teimouri, M., Shakiba, R.: MRL Team Description Paper for Humanoid KidSize League of RoboCup 2014. 
+Mechatronics Research Lab, Dept. of Computer and Electrical Engineering,
+Qazvin Islamic Azad University, Qazvin, Iran (2014)
+
+\bibitem{tree} van der Molen, H.: Self-localization in the RoboCup Soccer Standerd Platform League with the use of a Dynamic Tree. A Bachelor Thesis in Artificial Intelligence, University Of Amsterdam (2011)
 
 \bibitem{smit:wat} Smith, T.F., Waterman, M.S.: Identification of Common Molecular
 Subsequences. J. Mol. Biol. 147, 195--197 (1981)
