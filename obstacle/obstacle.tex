@@ -282,7 +282,7 @@ The goal information (goal post positions and goal centre position) is needed to
 
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
-	{\caption{Plot of raw goal centre data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vector to goal centre was $(2000$  $0)^T$. The robot was standing still.}
+	{\caption{Plot of raw goal centre data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vector to goal centre was $(2000$  $0)^T$. The robot was standing still. The goal center (purple) and robot (black) were placed in the plot afterwards.}
 	\label{fig:noise1}}
 \end{figure}
 
@@ -326,9 +326,9 @@ Due to the performance issues of pure Python implementations we refactored the c
 \\
 In addition to that the refactored, performant version of our DBSCAN is implemented object oriented. This leads to an overhead in space complexity but offered easier debugging as well as an additional improvement of execution time because the calculations are saved in objects and those cached results are re-used as much as possible.
 \\
-In our tested cases the pure Python implementation ran about 8 to 12 times slower on average (dependent on current background tasks) on our darwin-op hardware compared to our current object oriented Python implementation with Numpy and other SciPy libraries.
+In our tested cases the pure Python implementation ran about 8 to 12 times slower on average (dependent on current background tasks) on the darwin-op hardware compared to our current object oriented Python implementation with Numpy and other SciPy libraries.
 \\
-Those optimizations are essential considering the very limited computing power of our current darwin-op robots.
+Those optimizations are essential considering the very limited computing power of the current darwin-op robots.
 \\
 For calculating the goal information each goal posts raw input data (if post is seen) is recorded separately in buffers of a maximum size of 60 items. Every new frame delivers one new data set and on average the robots architecture is able to handle about 20 frames per second. If a buffer is full, the oldest entry is dropped and the newest saved. As data structure for the buffers we chose Python Deque objects for easy appending and extracting data sets.
 \\
@@ -363,7 +363,7 @@ This process loops through all data sets, finds the clusters and continues until
 
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{dbscan_data_plot1.pdf}}
-	{\caption{Plot of DBSCAN-filtered and averaged data. 100 data sets have been recorded in about 5 seconds. Original vertical distance (v) to the post was 2000mm and horizontal distance 1000mm. The robot was standing still.}\label{fig:dbscan_plot1}}
+	{\caption{Plot of DBSCAN-filtered and averaged data. Recorded object was a goal post to the right of the robot. 100 data sets have been recorded in about 5 seconds. Original vertical distance (v) to the post was 1000mm and horizontal distance (u) 2000mm. The robot was standing still.}\label{fig:dbscan_plot1}}
 \end{figure}
 
 Throughout our testing process we experienced positive results with a $\kappa$ of 6 and an $\epsilon$ of 50 as parameters for our DBSCAN implementation.
@@ -387,15 +387,17 @@ For fixing the calibration issues and more accurate data our idea was to impleme
 \\
 The module is designed object oriented and caches every calculation to prevent something being calculated twice. This, again, increases the space complexity but decreases the computing time and was simpler in cases of debugging, too.
 \\
-In addition to this the whole data (weights, bias, activations, outputs, ...) is stored in arrays of Numpy and always calculated with Numpy matrix operations or scalars to save as much computation time as possible.
+In addition to this the whole data (weights, bias, activations, outputs, ...) is stored in Numpy arrays and always calculated with Numpy matrix operations or scalars to save as much computation time as possible.
 \\
-Furthermore the neural network is designed dynamically. All configurations are variably. At the moment our network has an input layer with 2 neurons, 2 hidden layers with 10 and 5 neurons and an output layer with 2 output neurons. The learning rate $\epsilon$ is $0.2$ with $20,000$ learning steps and $1,000$ training data sets.
+Furthermore the neural network is designed dynamically. All configurations are alterable. At the moment our network has an input layer with 2 neurons, 2 hidden layers with 10 and 5 neurons and an output layer with 2 output neurons. The learning rate $\epsilon$ is $0.2$ with $20,000$ learning steps and $1,000$ training data sets.
 \\
-All this configurations can be changed instantly, for example a list of integers $[10, 5]$ represents the hidden layers at the moment and can be changed to $[20, 10, 5]$ which would create a net with 3 hidden layers with 20, 10 and 5 neurons per layer.
+All this configurations can be changed instantly, for example a Python list of integers $[10, 5]$ represents the hidden layers at the moment and can be changed to $[20, 10, 5]$ at any time, which would create a net with 3 hidden layers with 20, 10 and 5 neurons per layer.
 \\
-In figure~\ref{fig:ann_illustration1} our multilayer perceptron design is illustrated. Overall it follows the standard MLP design \cite{mlp}. Each layer is fully connected to the parents layer, as a transfer function we use hyperbolic tangent ($tanh$) as well as its derivation for learning which is realized via supervised learning with backpropagation.
+In addition to this our neural network class can save its configuration (trained weights and bias, layers and neurons) by encoding the arrays via base64 and dumping all Python and Numpy Array information with JSON. This encoded string has a length of about 20 lines and is written in a file. The class is able to read this file, decode the information and rebuild itself automatically.
 \\
-In contrast to the standard feedforward activation we implemented custom version. The standard feedforward activation:
+In figure~\ref{fig:ann_illustration1} our multilayer perceptron design is illustrated. Overall it follows the standard MLP design \cite{mlp}. Each layer is fully connected to the parents layer. As a transfer function we use hyperbolic tangent ($tanh$) as well as its derivation for learning which is realized via supervised learning with backpropagation.
+\\
+In contrast to the standard feedforward activation we implemented a customized version. The standard feedforward activation:
 \\
 \begin{equation}
 \label{equ:mlp_feedforward_standard}
@@ -404,9 +406,9 @@ h_{i}^{\lambda} (\vec{w}_{i}^{\lambda \lambda-1})
 \sum\limits_{j} w_{ij}^{\lambda \lambda-1} s_{j}^{\lambda-1} + b_{i}^{\lambda}
 \end{equation}
 \\
-$h_{i}^{\lambda}$ is the whole activation of neuron $i$ in layer $\lambda$. The weights of neuron $i_{\lambda}$ are described by $\vec{w}_{i}^{\lambda \lambda-1}$, so this represents the weights between the current neuron of current layer $\lambda$ and the parents neuron of parent layer $\lambda-1$. The output of each neuron for layer $\lambda-1$ is $s_{j}^{\lambda-1}$, so the parents layers neurons are indexed with $j$. Finally the bias $b_{i}^{\lambda}$ is added to create a kind of threshold.
+$h_{i}^{\lambda}$ is the whole activation of neuron $i$ in layer $\lambda$. The weights of neuron $i_{\lambda}$ are described by $\vec{w}_{i}^{\lambda \lambda-1}$, so this represents the weights between the current neuron of current layer $\lambda$ and the parents neuron of parent layer $\lambda-1$. The output of each neuron for layer $\lambda-1$ is $s_{j}^{\lambda-1}$, so the parent layers neurons are indexed with $j$. Finally the bias $b_{i}^{\lambda}$ is added to create a kind of threshold.
 \\
-The neuron output then simply is the activation corrected by the transfer function:
+The neuron output of a neuron $i_{\lambda}$ then simply is the activation corrected by the transfer function:
 \\
 \begin{equation}
 \label{equ:mlp_neuron_output}
@@ -415,11 +417,11 @@ s_{i}^{\lambda} (h_{i}^{\lambda}) = tanh(h_{i}^{\lambda})
 \\
 Testing equation~\ref{equ:mlp_feedforward_standard} for our neural network showed that the learning process takes a vast amount of time and steps.
 \\
-This happens because of the non-linear transfer function $tanh$ which is used to normalize the neuron's activation and our network design having 10 and 5 neurons in the hidden layers. The limes $\lim\limits_{x \to \infty} tanh(x)$ is 1 and because of the fully connected layers (see figure~\ref{fig:ann_illustration1}) and randomly initialized weights the activation of one single neuron (which is the sum of the output of each parent layers neuron multiplied with the weights plus its bias (see equation~\ref{equ:mlp_feedforward_standard}) can be far higher than 1 so that the hyperbolic tangent returns 1 for a long period of time.
+This happens because of the non-linear transfer function $tanh$ which is used to normalize the neuron's activation and our network design having 10 and 5 neurons in the hidden layers. The limes $\lim\limits_{x \to \infty} tanh(x)$ is 1 and because of the fully connected layers (see figure~\ref{fig:ann_illustration1}) and randomly initialized weights the activation $h_{i}^{\lambda}$ of one single neuron (which, as shown in equation~\ref{equ:mlp_feedforward_standard}, is the sum of the output of each parent layers neuron multiplied with the weights plus its bias) can be far higher than 1 so that the hyperbolic tangent function returns 1 for a long period of time for the output $s_{i}^{\lambda}$ of this neuron. This inhibits the learning / backpropagation.
 \\
-Considering this problem, the output of the hidden layers are near 1 for several hundreds, sometimes thousands of learning steps.
+Considering this problem, the output of the hidden layers are near 1 for several hundreds, sometimes thousands of learning steps. This takes a vast amount of time until the weights would change to decrease the neurons output. Those learning steps will not improve the network but just deteriorate the results. 
 \\
-To fix this problem, we simply customized the activation function. Instead of adding all incoming activations we took the average activation of the parent layer, so the activation for each neuron always is in the interval of $[-1.0, 1.0]$:
+To fix this problem, we customized the activation function. Instead of simply adding all incoming activations from each parent layers neuron we took the average activation of the whole parent layer to ensure the activation will always be in the interval of $[-1.0, 1.0]$ (this interval produces far better results with $tanh$):
 \\
 \begin{equation}
 \label{equ:mlp_feedforward_custom}
@@ -431,7 +433,7 @@ h_{i}^{\lambda} (\vec{w}_{i}^{\lambda \lambda-1})
 {\eta^{\lambda-1}}
 \end{equation}
 \\
-In our custom equation (\ref{equ:mlp_feedforward_custom}) the $\eta^{\lambda-1}$ is the number of neurons in the parent layer $\lambda-1$. Dividing the activation by $\eta^{\lambda-1}$ ensures the whole activation of neuron $i$ to be in the interval of $[-1.0, 1.0]$ as mentioned.
+In our customized feedforward activation (equation~\ref{equ:mlp_feedforward_custom}), the $\eta^{\lambda-1}$ is the amount of neurons total in the parent layer $\lambda-1$. Dividing the activation by $\eta^{\lambda-1}$ ensures the whole activation of neuron $i$ to be in the interval of $[-1.0, 1.0]$ as mentioned.
 \\
 This method greatly reduced the needed learning time and steps of our network. The saved amount of time and steps increases with larger nets because the overall higher activation without this normalization would cause the hyperbolic tangent function to map the values nearly 1 for a longer time.
 
