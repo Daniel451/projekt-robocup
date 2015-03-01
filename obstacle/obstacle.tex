@@ -23,7 +23,7 @@
 \usepackage{makeidx}  % allows for indexgeneration
 % \makeindex          % be prepared for an author index
 %
-\setlength{\textheight}{600pt}
+\setlength{\textheight}{620pt}
 
 \begin{document}
 %
@@ -68,7 +68,7 @@ The location is done via a grid world and for filtering a customized DBSCAN algo
 The communication uses the mitecom standard.
 
 %                         please supply keywords within your abstract
-\keywords {obstacle recognition, obstacle avoidance, localisation, filtering, clustering, data smoothing, vision, swarm intelligence, grid world, DBSCAN, artificial neural network, multi-layer perceptron, robotics, mitecom}
+\keywords {obstacle recognition, obstacle avoidance, localisation, filtering, clustering, data smoothing, vision, swarm intelligence, grid world, DBSCAN, artificial neural network, multilayer perceptron, robotics, mitecom}
 \end{abstract}
 %
 
@@ -113,11 +113,11 @@ The testing and debugging for each of the topics was done jointly by all of us.
 \\
 In our paper the abstract, the first introduction part, the motivation and the summary were written as a team.
 \\
-The subtopics "Vision" and "Filtering" under the topics "Problems", "Solutions" and "Results" were written by Daniel Speck.
+The subsections ~\ref{sec:problems_vision}, ~\ref{sec:solutions_vision}, ~\ref{sec:results_vision} "Vision" and ~\ref{sec:problems_filtering}, ~\ref{sec:solutions_filtering}, ~\ref{sec:results_filtering} "Filtering" under the sections "Problems", "Solutions" and "Results" were written by Daniel Speck.
 \\
-The subtopic "Localisation" under the topics "Problems", "Solutions" and "Results" were written by Benjamin Scholz.
+The subsections ~\ref{sec:problems_localisation}, ~\ref{sec:solutions_localisation}, ~\ref{sec:results_localisation} "Localisation" under the sections "Problems", "Solutions" and "Results" were written by Benjamin Scholz.
 \\
-The subtopic "Communication" under the topics "Problems", "Solutions" and "Results" were written by Judith Hartfill.
+The subsections ~\ref{sec:problems_communication}, ~\ref{sec:solutions_communication}, ~\ref{sec:results_communication} "Communication" under the topics "Problems", "Solutions" and "Results" were written by Judith Hartfill.
 
 
 
@@ -147,10 +147,11 @@ Those aspects cause a big increase in making the robot football play more realis
 %%%          %%%
 %%%%%%%%%%%%%%%%
 
-\subsection{Problems}
+\section{Problems}
 
 
-\subsubsection{Vision}
+\subsection{Vision}
+\label{sec:problems_vision}
 For an intelligent obstacle recognition several sufficiently pre-processed data input is needed to localise the obstacle itself, localise the robot itself, classify the obstacle (ball, goal, teammate, enemy, other obstacle) and develop an adequate strategy of (re-)action.
 \\
 One of our first problems were the already implemented algorithm for obstacle detection and goal detection. We discovered that neither obstacles nor goals were tracked/recognized satisfactorily for our tasks.
@@ -166,7 +167,8 @@ The algorithm was designed to draw a rectangle over a possible goal post but it 
 Appropriately reacting behaviour systems e.g. for intelligent obstacle recognition, localisation and further path planning or even postprocessing filters would fail on such raw data.
 
 
-\subsubsection{Filtering}
+\subsection{Filtering}
+\label{sec:problems_filtering}
 The whole topic of obstacle recognition relies on information which is extracted out of (heavily) noisy input data.
 \\
 For our solutions primarily the goal post data and the later calculated goal centre information is important to calculate real, absolute coordinates for localisation purposes on the field out of the relative camera input.
@@ -180,7 +182,8 @@ Since the robots do not have auto-calibration features the calibration of the ca
 In addition to that the manual calibration is expansive in terms of time.
 
 
-\subsubsection{Localisation}
+\subsection{Localisation}
+\label{sec:problems_localisation}
 Detecting an obstacle isn't worth much without knowing our own robot's position on the field. Of course the robot could avoid the recognised obstacle, but there is no way of knowing if it benefits our team in this situation. If the robot bypasses an opponent but actually walks in the wrong direction we haven't gained anything. 
 \\
 Also there is no way of knowing what robots are our team members and which one are our opponents.
@@ -190,7 +193,8 @@ If the robot had all this data it could make more intelligent decisions and impr
 To achieve these goals we need a world model we can store information in, like our own position and the position of our team members and opponents.
 
 
-\subsubsection{Communication}
+\subsection{Communication}
+\label{sec:problems_communication}
 When thinking about how to achieve most and best information for each robot, we thought about swarm intelligence mechanisms. Although the Darwin-OP platforms that we use do have a lot more computing capacity then usual swarm intelligence bots have, we still can benefit from researches in this part of robotics. 
 \\
 Particularly as communicating, which is the basis for any smart intelligence, is a very important part in "real" human soccer, extending this aspect makes robot soccer even more humanoid, although Wi-Fi is a very unnatural (nevertheless not unhumanoid) way to communicate. In the future communicating vis Wi-Fi is going to be substituted by communicating via natural speech and speech comprehension, but getting started with this slightly simpler form is very important for the development.
@@ -221,6 +225,7 @@ But to use the whole capability of communication, shared information and thus in
 %%%%%%%%%%%%%%
 
 \subsection{Vision}
+\label{sec:solutions_vision}
 The visions detection of obstacles and objects is based on a horizon scanning algorithm which tries to find the horizon in the current frame. Basically it reads the pixel information of the current frame in matrix and finds the specific row where the horizon is located.
 Once this row is found the algorithm for obstacle detection scans down to find "green" pixels for locating the field. Every obstacle, for example the goal posts, create non-green shapes in this matrix.
 
@@ -258,6 +263,7 @@ Those obstacles information is processed separately and can be filtered to stabi
 %%%%%%%%%%%%%%%%%
 
 \subsection{Filtering}
+\label{sec:solutions_filtering}
 
 \subsubsection{Data noise}
 
@@ -290,6 +296,15 @@ $\vec{d_{0}} := \left( \begin{array}{cc} 2000 & 0 \end{array} \right)^{T}$ is th
 $\vec{d_{1}} := \left( \begin{array}{cc} 1797 & -25 \end{array} \right)^{T}$ and
 $\vec{d_{2}} := \left( \begin{array}{cc} 1877 & 107 \end{array} \right)^{T}$
 are the vectors of two recorded points shown in figure~\ref{fig:noise1}.
+\\
+The euclidean distance $ed$ between two vectors $\vec{a}, \vec{b}$ is calculated by:
+\\
+\begin{equation}
+\label{equ:euclidean_distance}
+ed = \sqrt{\sum_{i=1}^{n} (a_i - b_i)^2}
+\end{equation}
+\\
+For two dimensional problems $n$ of equation~\ref{equ:euclidean_distance} is 2. Herewith we can calculate the differences between the vectors.
 \\
 $\vec{d}_{0}$ differs to $\vec{d}_{1}$ by
 $ 204 = \sqrt{(2000 - 1797)^2 + (0 - (-25))^2}$ and 
@@ -337,7 +352,7 @@ The point counts itself to its neighbourhood, too. Therefore every point has a $
 \\
 All points are two-dimensional and consist of the relative horizontal distance ($u$) and the relative vertical distance ($v$) to the object.
 \\
-At first DBSCAN marks every point as "unvisited". In the next step the algorithm chooses one point $p_0$ at random, marks it as "visited" and searches in his neighbourhood for neighbouring points within its $\epsilon$ radius. This is done by calculating the euclidean distance between the points.
+At first DBSCAN marks every point as "unvisited". In the next step the algorithm chooses one point $p_0$ at random, marks it as "visited" and searches in his neighbourhood for neighbouring points within its $\epsilon$ radius. This is done by calculating the euclidean distance (see equation~\ref{equ:euclidean_distance}) between the points.
 \\
 This procedure would find all points within a circle with the radius of $\epsilon$ as shown in figure~\ref{fig:dbscan_illustration1}. If the amount of found neighbouring points in neighbourhood to $p_0$ is greater or equal to $\kappa$, than a new cluster is initialized. Otherwise the point is would be marked as "noise".
 \\
@@ -364,7 +379,7 @@ Nevertheless the goal post information may be sufficient for some purposes, but 
 For this purpose, to further improve the stability and precision of goal centre information, we implemented an artificial neural network.
 
 \subsubsection{Artificial Neural Network}
-For fixing the calibration issues and more accurate data our idea was to implement an artificial neural network (multi-layer perceptron design).
+For fixing the calibration issues and more accurate data our idea was to implement an artificial neural network (multilayer perceptron design).
 \\
 The module is designed object oriented and caches every calculation to prevent something being calculated twice. This, again, increases the space complexity but decreases the computing time and was simpler in cases of debugging, too.
 \\
@@ -376,10 +391,30 @@ All this configurations can be changed instantly, for example a list of integers
 \\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{neuralnet1.pdf}}
-	{\caption{Illustration of our Artificial Neural Network design (multi-layer perceptron).}\label{fig:ann_illustration1}}
+	{\caption{Illustration of our Artificial Neural Network design (multilayer perceptron).}\label{fig:ann_illustration1}}
 \end{figure}
 \\
-In figure~\ref{fig:ann_illustration1} our multi-layer perceptron design is illustrated.
+In figure~\ref{fig:ann_illustration1} our multilayer perceptron design is illustrated. Overall it follows the standard MLP design \cite{mlp}. Each layer is fully connected to the parents layer, as a transfer function we use hyperbolic tangent (tanh) as well as its derivation for learning which is realized via supervised learning with backpropagation.
+\\
+In contrast to the standard feedforward activation we implemented custom version. The standard feedforward activation:
+\\
+\begin{equation}
+\label{equ:mlp_feedforward_standard}
+h_{i}^{\lambda} (\vec{w}_{i}^{\lambda \lambda-1})
+=
+\sum\limits_{j} w_{ij}^{\lambda \lambda-1} s_{j}^{\lambda-1} + b_{i}^{\lambda}
+\end{equation}
+\\
+$h_{i}^{\lambda}$ is the whole activation of neuron $i$ in layer $\lambda$. The weights of neuron $i_{\lambda}$ are described by $\vec{w}_{i}^{\lambda \lambda-1}$, so this represents the weights between the current neuron of current layer $\lambda$ and the parents neuron of parent layer $\lambda-1$. The output of each neuron for layer $\lambda-1$ is $s_{j}^{\lambda-1}$, so the parents layers neurons are indexed with $j$. Finally the bias $b_{i}^{\lambda}$ is added to create a kind of threshold.
+\\
+The neuron output then simply is the activation corrected by the transfer function:
+\\
+\begin{equation}
+\label{equ:mlp_neuron_output}
+s_{i}^{\lambda} (h_{i}^{\lambda}) = tanh(h_{i}^{\lambda})
+\end{equation}
+\\
+Testing equation~\ref{equ:mlp_feedforward_standard} for our neural network showed that the learning process takes a vast amount of time and steps. This is because of the non-linear transfer function $tanh$ which is used to normalize 
 \\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot1.pdf}}
@@ -405,6 +440,7 @@ Figure~\ref{fig:ann_plot2} demonstrates the output of an overfitted network.
 %%%%%%%%%%%%%%%%%%%%
 
 \subsection{Localisation}
+\label{sec:solutions_localisation}
 
 \subsubsection{Calculating our robot's position}
 The robot provides a lot of different data.
@@ -595,6 +631,7 @@ This is one of the advantages of this representation of the field. The inaccurac
 %%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Communication}
+\label{sec:solutions_communication}
 Communication has always been one of the most important fields of research in RoboCup, at least it was the main reason to found the institution to find out whether two or more robots might possibly be able to act together in a senseful way. 
 \\
 Due to the increasing number of robots one team is allowed to have on the field (up two eleven in 2050, as the roadmap plans) and the high costs for one robot, it will become more and more necessary to cooperate with other teams. When there were the first tries of mixed teams some years ago, it was very fast obvious, that robots from different teams will have to communicate with each other.
@@ -630,13 +667,20 @@ However, when a team mate is added to the Grid World, the only value it cannot o
 \section{Results}
 
 \subsection{Vision}
+\label{sec:results_vision}
 tbd
 
 \subsection{Filtering}
+\label{sec:results_filtering}
 tbd
 
 \subsection{Localisation}
+<<<<<<< HEAD
 Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Another possible usage could be to coordinate which player should go to the ball depending on who has the shortest path. And there's a lot more potential to benefit from the grid world.
+=======
+\label{sec:results_localisation}
+Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Or one could coordinate which player should go to the goal depending on who has the shortest path. And there's a lot more potential for usages.
+>>>>>>> 9d0922eaec6c858f2aa40ac585df799864b6bbd4
 \\
 We also implemented a solution that computes the position of our robot with vectors instead of angles. But this was towards the end of our project so we didn't have enough time to explain it in this paper.
 \\
@@ -648,6 +692,7 @@ So there is still a lot of room for improvements, but this was something we expe
 
 
 \subsection{Communication}
+\label{sec:results_communication}
 For the communication part it can be said, that the basis for a lot of further work is done. At the moment sharing information on localisation increases the quality and quantity of every single robot and thus of the whole team. The error rate is being reduced and so the information becomes more reliable. It is hard to quantify the advantage, but the next competition will hopefully give the answer. At least it will be very hard for the robots trying to score on their own goal.
 \\
 Something that needs to developed in further work is the question of data integration. Our solution with the very simple overwriting hierarchy between opponents, team mates and the robots own position is good enough for the beginning of development is this area, but soon will come to its limitations, especially when there are several robots standing close to each other. In this situation our assumption of a robot moving one cell per iteration would be wrong, because it was not a movement of one robot, but really two robots standing close to each other. So opponent robots could be deleted. 
@@ -691,6 +736,10 @@ The communication module provides each robot's information for the whole team an
 A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise.
 In: Proceedings of 2nd International Conference on Knowledge Discovery and Data Mining (KDD-96),
 pp. 226--231. AAAI Press, Munich (1996)
+
+\bibitem{mlp} Grosan, C., Abraham, A.:
+Intelligent Systems - A Modern Approach.
+pp. 299--316. Springer Berlin Heidelberg, Volume 17 (2011)
 
 \bibitem{grid} Salehi, M.E., Safdari, R., Abedi, E., Foroughi, B., Salimi, A., Farokhi, E., Teimouri, M., Shakiba, R.: MRL Team Description Paper for Humanoid KidSize League of RoboCup 2014. 
 Mechatronics Research Lab, Dept. of Computer and Electrical Engineering,
