@@ -23,7 +23,7 @@
 \usepackage{makeidx}  % allows for indexgeneration
 % \makeindex          % be prepared for an author index
 %
-\setlength{\textheight}{620pt}
+\setlength{\textheight}{640pt}
 
 \begin{document}
 %
@@ -148,7 +148,7 @@ Those aspects cause a big increase in making the robot football play more realis
 %%%%%%%%%%%%%%%%
 
 \section{Problems}
-
+ and due to the limited computing power of our robots it is not recommended to overuse DBSCAN or the neural network.
 
 \subsection{Vision}
 \label{sec:problems_vision}
@@ -674,7 +674,11 @@ However, when a team mate is added to the Grid World, the only value it cannot o
 
 \subsection{Vision}
 \label{sec:results_vision}
-tbd
+The vision of the bitbots software is completely renewed at the moment and as a result of that our current vision solutions would most likely be not compatible with the new vision. Unfortunately, as the new vision is still in an early testing stage, we were not able to implement the new vision in our project.
+\\
+Independently, the searching of the bottom of detected objects implemented by us remains an interesting feature that supplied better data, especially in combination with the filters it is robust and reliable enough to enable localisation.
+\\
+However the current vision software has issues and is not able to track objects like the goal posts stable/perfectly but perhaps some of the implemented concepts would also improve the development of the new vision. At least the interface of the current vision to the filters is dynamically build and thus adapting our filters with an similar interface to the new vision can be done easily.
 
 \subsection{Filtering}
 \label{sec:results_filtering}
@@ -685,24 +689,33 @@ On the contrary the cost of computation time of DBSCAN is far higher than simple
 In addition to that the DBSCAN algorithm is at the moment nearly useless when it comes to moving objects or obstacles, like a ball because of the camera only recording about 20 frames per second the DBSCAN algorithm nether has enough data sets of the object to filter it appropriately. For filtering moving objects with DBSCAN a much higher framerate and thus a faster processor is needed to produce acceptable results.
 \\
 For our work respectively for the darwin-op the conclusion is to not overuse DBSCAN and to use other filters for moving objects, especially for fast moving objects. The speed of robots is slow enough to filter those data via DBSCAN but the quality of results is not worth the computation time costs. Fast moving objects like balls should not be filtered with the DBSCAN.
-\\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot1.pdf}}
-	{\caption{Plot of our neural network output with calibrated vision data compared to the just DBSCAN-filtered data.}\label{fig:ann_plot1}}
+	{\caption{Plot of our neural network output with calibrated vision data compared to the just DBSCAN-filtered data. Goal posts have been placed at the positions (2000, -500), (2000, 0) and (2000, 500). The only DBSCAN filtered data (blue) has a higher standard deviation and misses the target values because of calibration issues. The DBSCAN and neural network filtered data has about half the standard deviation and is automatically calibrated by the neural network. }\label{fig:ann_plot1}}
 \end{figure}
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot2.pdf}}
-	{\caption{Plot of an overfitted neural network.}\label{fig:ann_plot2}}
+	{\caption{Plot of an overfitted neural network. Heavily magnification of a cluster of datasets, filtered by DBSCAN and the the neural network. Object (goal post) was recorded in a vertical distance of 2m and a horizontal distance of 0mm. }\label{fig:ann_plot2}}
 \end{figure}
 \\
 To further boost the filtering results and to avoid manual (camera, ...) calibration a neural network can be used.
 \\
 As shown in figure~\ref{fig:ann_plot1} our neural network easily calibrates the vision if sufficient training data is recorded. This renders manual calibration obsolete and saves time. In addition to this the standard deviation of DBSCAN and averaged data is less than 5mm for most of the time (and less 10mm in nearly all test scenarios) when objects are recorded in range of less or equal $2.5$m and the neural network improves this to a standard deviation of less than 3mm for those objects.
 \\
-Overall the neural network supplies an improvement of 25 to 50\% in accuracy for DBSCAN-filtered objects in range of less or equal $2.5$m. Unfortunately we did not manage to do a full comparison of DBSCAN and DBSCAN plus neural network data as this would have exceeded the 20 pages limit and especially the deadline of our paper but nevertheless in figure~\ref{fig:ann_plot1} at least the smaller sizes of the neural network clusters compared to the DBSCAN clusters can be perceived.
+Overall the neural network supplies an improvement of 25 to 50\% in accuracy (if measured via standard deviation) for DBSCAN-filtered objects in range of less or equal $2.5$m. Unfortunately we did not manage to do a full comparison of DBSCAN and DBSCAN plus neural network data as this would have exceeded the 20 pages limit and especially the deadline of our paper but nevertheless in figure~\ref{fig:ann_plot1} at least the smaller sizes of the neural network clusters compared to the DBSCAN clusters can be perceived.
 \\
+In opposition to the features, figure~\ref{fig:ann_plot2} demonstrates that neural networks can easily be overfitted. It is relatively hard to determine the best configuration for teaching the neural network. In our case of goal post / center localisation overfitting is not a big problem, because our gridworld already abstracts from real coordinates and maps it in the grids. So with a sufficient amount of training data the neural network could be overfitted to learn to map real coordinates directly to the grids of the gridworld.
 \\
-Figure~\ref{fig:ann_plot2} demonstrates the output of an overfitted network.
+However this scenario should not be implemented in release versions of the software until it is sufficiently tested. Overfitting of neural networks can drastically reduce the quality of produced data after training the network if the data passed to the network differs to much from training data.
+\\
+Supplementary the cost of computation time is higher compared to the easier filtering methods which were already mentioned and of course manual calibration would cost no computation time at all. Considering those negative side effects the neural network should not be overused as well.
+\\
+In contrary to the DBSCAN the neural network can also learn to filter and calibrate the positions of fast moving objects. Testing results with the ball were promising but not stable at different distances. The errors decreased with bigger neural nets but this would also heavily increase the computation time.
+\\
+Moreover the neural network needs a vast amount of training data to deliver accurate filtered and calibrated data. This can also be a time intensive task as collecting the training data takes quite some time.
+\\
+Conclusive the DBSCAN algorithm can be used for filtering goal information without issues. The neural network should only be used if sufficient training data was supplied. Additionally new training data has to be recorded over time because when the hardware changes the calibration error changes, too.
+
 
 \subsection{Localisation}
 \label{sec:results_localisation}
