@@ -68,7 +68,7 @@ The location is done via a grid world and for filtering a customized DBSCAN algo
 The communication uses the mitecom standard.
 
 %                         please supply keywords within your abstract
-\keywords {obstacle recognition, obstacle avoidance, localisation, filtering, data smoothing, vision, swarm intelligence, grid world, DBSCAN, artificial neural network, multi-layer perceptron, robotics, mitecom}
+\keywords {obstacle recognition, obstacle avoidance, localisation, filtering, clustering, data smoothing, vision, swarm intelligence, grid world, DBSCAN, artificial neural network, multi-layer perceptron, robotics, mitecom}
 \end{abstract}
 %
 
@@ -149,6 +149,7 @@ Those aspects cause a big increase in making the robot football play more realis
 
 \subsection{Problems}
 
+
 \subsubsection{Vision}
 For an intelligent obstacle recognition several sufficiently pre-processed data input is needed to localise the obstacle itself, localise the robot itself, classify the obstacle (ball, goal, teammate, enemy, other obstacle) and develop an adequate strategy of (re-)action.
 \\
@@ -164,6 +165,7 @@ The algorithm was designed to draw a rectangle over a possible goal post but it 
 \\
 Appropriately reacting behaviour systems e.g. for intelligent obstacle recognition, localisation and further path planning or even postprocessing filters would fail on such raw data.
 
+
 \subsubsection{Filtering}
 The whole topic of obstacle recognition relies on information which is extracted out of (heavily) noisy input data.
 \\
@@ -176,6 +178,7 @@ Having such noisy data renders absolute positioning tasks and intelligent obstac
 Since the robots do not have auto-calibration features the calibration of the camera and motor angles deteriorate the noise problem. Once the calibration is manually done its configuration is static but the real values vary other time, for example when the robot falls accidently.
 \\
 In addition to that the manual calibration is expansive in terms of time.
+
 
 \subsubsection{Localisation}
 Detecting an obstacle isn't worth much without knowing our own robot's position on the field. Of course the robot could avoid the recognised obstacle, but there is no way of knowing if it benefits our team in this situation. If the robot bypasses an opponent but actually walks in the wrong direction we haven't gained anything. 
@@ -199,7 +202,6 @@ But to use the whole capability of communication, shared information and thus in
 
 
 
-
 %%%%%%%%%%%%%%%%%
 %%%           %%%
 %%% Solutions %%%
@@ -207,6 +209,10 @@ But to use the whole capability of communication, shared information and thus in
 %%%%%%%%%%%%%%%%%
 
 \section{Solutions}
+
+
+
+
 
 %%%%%%%%%%%%%%
 %%%        %%%
@@ -217,6 +223,7 @@ But to use the whole capability of communication, shared information and thus in
 \subsection{Vision}
 The visions detection of obstacles and objects is based on a horizon scanning algorithm which tries to find the horizon in the current frame. Basically it reads the pixel information of the current frame in matrix and finds the specific row where the horizon is located.
 Once this row is found the algorithm for obstacle detection scans down to find "green" pixels for locating the field. Every obstacle, for example the goal posts, create non-green shapes in this matrix.
+
 
 \subsubsection{Goal information}
 The algorithm searches for the yellow color mask of the goal posts to detect every goal post in the current frame. For every potential goal post which is found the algorithm tries to extrapolate the shape of the goal post and to fit a virtual rectangle with nearly the same dimensions on it.
@@ -230,6 +237,7 @@ In addition to that the implemented algorithm now searches the bottom of the obj
 Scanning for the bottom of the object is even more profitable when it comes to the height of the object because the bottom of a goal post (yellow) and the field (green or white) always have a hight contrast change so the bottom line is found reliably.
 \\
 To further improve the detection of the goal posts we finally modified the algorithm not to take a corner of the virtual rectangle but to calculate the center of the bottom line. This approach is more stable because the error is halfed when the width of the virtual rectangle changes.
+
 
 \subsubsection{Obstacle information}
 The obstacle detection also scans downwards starting at the horizon line in the current frames matrix. Abnormal contrast changes are interpreted as obstacles if its size is large enough.
@@ -292,6 +300,7 @@ in euclidean distance.
 Those differences are too large to ensure a correct mapping in our grid world module as the differences occurred in less than three seconds while the robot was standing still. In addition the vertical difference between $\vec{d}_{1}$ and $\vec{d}_{2}$ is $ 134 = |-27| + 107 = |-27| + |107|$. Recordings of several seconds show the mentioned noise distribution in a circle of about a quarter of a metre.
 \\
 Nevertheless clusters of points can be detected in figure~\ref{fig:noise1} and this is the reason why we decided to filter the data via a DBSCAN algorithm.
+
 
 \subsubsection{DBSCAN}
 Our approach to reduce the noise on data was implementing a two dimensional version of the DBSCAN (density-based scanning) algorithm \cite{ester:kriegel}, which we slightly customized to our needs.
@@ -385,6 +394,7 @@ As shown in figure~\ref{fig:ann_plot1} the neural network easily calibrates the 
 \end{figure}
 \\
 Figure~\ref{fig:ann_plot2} demonstrates the output of an overfitted network.
+
 
 
 
@@ -574,7 +584,7 @@ So if we want to know the state of a certain position we call that dictionary an
 Every robot can determine their own position themselves. The position of the team members is shared over the wi-fi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team members the robots can compare the position of the robots they see with the location of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. 
 \\
 This is one of the advantages of this representation of the field. The inaccuracy makes it easier to compare the found objects on the map between team mates. If we would measure everything in millimetre, every robot would probably calculate slightly different positions for the objects and so matching them would become more difficult.
-\\
+
 
 
 
@@ -618,12 +628,21 @@ However, when a team mate is added to the Grid World, the only value it cannot o
 %%%%%%%%%%%%%%%
 
 \section{Results}
+
+\subsection{Vision}
+tbd
+
+\subsection{Filtering}
+tbd
+
 \subsection{Localisation}
 Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Or one could coordinate which player should go to the goal depending on who has the shortest path. And there's a lot more potential for usages.
 \\
 Unfortunately we didn't have enough time to conduct our tests of the grid world to the end. So there are still some bugs. Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to benefit from it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
 \\
 So there is still a lot of room for improvements, but this was something we expected at the start of the project. It's unfortunate that there wasn't more time to test our localisation and fix the rest of the bugs, but apart from this we are satisfied with the resulting localisation.
+
+
 \subsection{Communication}
 For the communication part it can be said, that the basis for a lot of further work is done. At the moment sharing information on localisation increases the quality and quantity of every single robot and thus of the whole team. The error rate is being reduced and so the information becomes more reliable. It is hard to quantify the advantage, but the next competition will hopefully give the answer. At least it will be very hard for the robots trying to score on their own goal.
 \\
@@ -674,9 +693,6 @@ Mechatronics Research Lab, Dept. of Computer and Electrical Engineering,
 Qazvin Islamic Azad University, Qazvin, Iran (2014)
 
 \bibitem{tree} van der Molen, H.: Self-localization in the RoboCup Soccer Standerd Platform League with the use of a Dynamic Tree. A Bachelor Thesis in Artificial Intelligence, University Of Amsterdam (2011)
-
-\bibitem{url} National Center for Biotechnology Information, http://www.ncbi.nlm.nih.gov
-
 
 \end{thebibliography}
 
