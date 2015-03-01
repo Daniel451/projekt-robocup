@@ -195,13 +195,13 @@ To achieve these goals we need a world model we can store information in, like o
 
 \subsection{Communication}
 \label{sec:problems_communication}
-When thinking about how to achieve most and best information for each robot, we thought about swarm intelligence mechanisms. Althought the Darwin-OP platfors that we use do have a lot more computing capacity then usual swarm intelligent bots have, we still can benefit from researches in this part of robotics. 
+When thinking about how to achieve most and best information for each robot, we thought about swarm intelligence mechanisms. Although the Darwin-OP platforms that we use do have a lot more computing capacity then usual swarm intelligence bots have, we still can benefit from researches in this part of robotics. 
 \\
-Particularly as communicating, which is the basis for any smar intelligance, is a very important part in "real" human soccer, extending this aspect makes robot soccer even more humanoid, althoug WIFI is a very unnatural (nevertheless not unhumanoid) way to communicate. In the future communicating vis WIFI is goig to be substituted by communicating via natural speech and speech comprehension, but getting startet with this slighly simplier form is very important for the development.
+Particularly as communicating, which is the basis for any smart intelligence, is a very important part in "real" human soccer, extending this aspect makes robot soccer even more humanoid, although Wi-Fi is a very unnatural (nevertheless not unhumanoid) way to communicate. In the future communicating vis Wi-Fi is going to be substituted by communicating via natural speech and speech comprehension, but getting started with this slightly simpler form is very important for the development.
 \\
 Until then, the robots only shared their own relative position to ball with each other. This was used to offset the lack of real localisation, especially the problem of symmetry. When a striker went towards the own goal with a ball, thinking it was te opponent goal, his own goalie would also see the ball and in return send its relative position to the ball. In case the distance between goalie and ball was less then half the field length, the striker could be quite sure to be playing onto its own goal and turned around. 
 \\
-But to use the whole capability of communication, shared information and thus interaction, we need a way to decode and encode information and to itegrade received data with own data.
+But to use the whole capability of communication, shared information and thus interaction, we need a way to decode and encode information and to integrate received data with own data.
 
 
 
@@ -231,9 +231,9 @@ Once this row is found the algorithm for obstacle detection scans down to find "
 
 
 \subsubsection{Goal information}
-The algorithm searches for the yellow color mask of the goal posts to detect every goal post in the current frame. For every potential goal post which is found the algorithm tries to extrapolate the shape of the goal post and to fit a virtual rectangle with nearly the same dimensions on it.
+The algorithm searches for the yellow colour mask of the goal posts to detect every goal post in the current frame. For every potential goal post which is found the algorithm tries to extrapolate the shape of the goal post and to fit a virtual rectangle with nearly the same dimensions on it.
 \\
-Often the width of the rectangle was calculated wrong (beeing twice or half as big as the original post). This failure exists because of image distortions which manipulate the objects shapes and the angle under which the object is seen (basically the bottom of the object is wider, the top thinner because of the angle).
+Often the width of the rectangle was calculated wrong (being twice or half as big as the original post). This failure exists because of image distortions which manipulate the objects shapes and the angle under which the object is seen (basically the bottom of the object is wider, the top thinner because of the angle).
 \\
 This problem basically remains but with modified parameters we were able to make the fitting of the virtual rectangle more strict. Those changes slightly improved the rectangle width compared to the real goal post.
 \\
@@ -241,7 +241,7 @@ In addition to that the implemented algorithm now searches the bottom of the obj
 \\
 Scanning for the bottom of the object is even more profitable when it comes to the height of the object because the bottom of a goal post (yellow) and the field (green or white) always have a hight contrast change so the bottom line is found reliably.
 \\
-To further improve the detection of the goal posts we finally modified the algorithm not to take a corner of the virtual rectangle but to calculate the center of the bottom line. This approach is more stable because the error is halfed when the width of the virtual rectangle changes.
+To further improve the detection of the goal posts we finally modified the algorithm not to take a corner of the virtual rectangle but to calculate the centre of the bottom line. This approach is more stable because the error is halved when the width of the virtual rectangle changes.
 
 
 \subsubsection{Obstacle information}
@@ -275,15 +275,15 @@ Those obstacles information is processed separately and can be filtered to stabi
 %  \label{fig:noise1}}
 %\end{wrapfigure}
 
-The majority of the bitbots code works without filters on raw data, especially in the case of goal information no postprocessing exists.
+The majority of the bitbots code works without filters on raw data, especially in the case of goal information no post-processing exists.
 \\
-The goal information (goal post positions and goal center position) is needed to localise the robot on the field in our case. Intelligent behaviour according to obstacle recognition relies on this localisation (our grid world module) so the goal information is the most important data for our software and has to be as accurate as possible.
+The goal information (goal post positions and goal centre position) is needed to localise the robot on the field in our case. Intelligent behaviour according to obstacle recognition relies on this localisation (our grid world module) so the goal information is the most important data for our software and has to be as accurate as possible.
 
 
 
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{noise_data_plot.pdf}}
-	{\caption{Plot of raw goal center data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal center was 2000mm and horizontal distance 0mm. The robot was standing still.}
+	{\caption{Plot of raw goal centre data (100 data sets recorded in about 5 seconds) without filtering and calibration. Original vertical distance to goal centre was 2000mm and horizontal distance 0mm. The robot was standing still.}
 	\label{fig:noise1}}
 \end{figure}
 
@@ -292,7 +292,7 @@ As shown by figure~\ref{fig:noise1} the noise of the raw data in combination wit
 We define a distance vector $\vec{d} := \left( \begin{array}{cc} u & v \end{array} \right)^{T}$ to contain the horizontal ($u$) and vertical ($v$) distance to a point relatively to the robot's position. 
 \\
 The vector 
-$\vec{d_{0}} := \left( \begin{array}{cc} 2000 & 0 \end{array} \right)^{T}$ is the real vector to the goal center and vectors like
+$\vec{d_{0}} := \left( \begin{array}{cc} 2000 & 0 \end{array} \right)^{T}$ is the real vector to the goal centre and vectors like
 $\vec{d_{1}} := \left( \begin{array}{cc} 1797 & -25 \end{array} \right)^{T}$ and
 $\vec{d_{2}} := \left( \begin{array}{cc} 1877 & 107 \end{array} \right)^{T}$
 are the vectors of two recorded points shown in figure~\ref{fig:noise1}.
@@ -340,9 +340,9 @@ In figure~\ref{fig:dbscan_illustration1} a graphical illustration of the DBSCAN 
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{dbscan1.pdf}}
 	{\caption{DBSCAN graphical illustration.
-	The points labeled with `C' are core points,
-	the yellow ones labeled with `D' are density-reachable points
-	and the red ones labeled with `N' noise points.
+	The points labelled with `C' are core points,
+	the yellow ones labelled with `D' are density-reachable points
+	and the red ones labelled with `N' noise points.
 	The minimum points parameter is set to $4$ in this example.}\label{fig:dbscan_illustration1}}
 \end{figure}
 
@@ -374,9 +374,9 @@ Before sending the filtered data our filter module calculates the arithmetical m
 \\
 Figure~\ref{fig:dbscan_plot1} shows a dataset of 100 red unfiltered points and the filtered and averaged blue points. The euclidean distance between the filtered points is decreased heavily and outliers are reliably marked as noise and therefore not processed nor averaged.
 \\
-Nevertheless the goal post information may be sufficient for some purposes, but at least for the goal center calculation this is not sufficient. Due to calibration issues and the distribution of noise the goal center calculation would not be optimal then calculated out of this data directly.
+Nevertheless the goal post information may be sufficient for some purposes, but at least for the goal centre calculation this is not sufficient. Due to calibration issues and the distribution of noise the goal centre calculation would not be optimal then calculated out of this data directly.
 \\
-For this purpose, to further improve the stability and precision of goal center information, we implemented an artificial neural network.
+For this purpose, to further improve the stability and precision of goal centre information, we implemented an artificial neural network.
 
 \subsubsection{Artificial Neural Network}
 For fixing the calibration issues and more accurate data our idea was to implement an artificial neural network (multilayer perceptron design).
@@ -617,7 +617,7 @@ To store the data we use a dictionary in Python. The indexes of the dictionary a
 \\
 So if we want to know the state of a certain position we call that dictionary and get back a number between 0 and 7. At the moment we don't use the numbers 6 and 7, but they could be useful in the future.
 \\
-Every robot can determine their own position themselves. The position of the team members is shared over the wi-fi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team members the robots can compare the position of the robots they see with the location of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. 
+Every robot can determine their own position themselves. The position of the team members is shared over the Wi-Fi, which will be explained in the next section. The robots can determine the position of opponents that they see. They share those positions so everyone has the position of as many opponents as possible. The robots actually can't distinguish between team mate and opponent. But because we know all the positions of our team members the robots can compare the position of the robots they see with the location of their team mates in their grid world. Only if there isn't a team mate in that cell they will identify the robot as an opponent. 
 \\
 This is one of the advantages of this representation of the field. The inaccuracy makes it easier to compare the found objects on the map between team mates. If we would measure everything in millimetre, every robot would probably calculate slightly different positions for the objects and so matching them would become more difficult.
 
@@ -632,25 +632,25 @@ This is one of the advantages of this representation of the field. The inaccurac
 
 \subsection{Communication}
 \label{sec:solutions_communication}
-Communication has always been one of the most important fields of research in RoboCup, at least it was the main reason to found the instituition to find out whether two or more robots might posibilly be able to act together in a sensful way. 
+Communication has always been one of the most important fields of research in RoboCup, at least it was the main reason to found the institution to find out whether two or more robots might possibly be able to act together in a senseful way. 
 \\
 Due to the increasing number of robots one team is allowed to have on the field (up two eleven in 2050, as the roadmap plans) and the high costs for one robot, it will become more and more necessary to cooperate with other teams. When there were the first tries of mixed teams some years ago, it was very fast obvious, that robots from different teams will have to communicate with each other.
 \\
-So some years ago, a RoboCup Soccer Humanoid Kid Size team implemented a WiFi communication standart, the so calles MiteCom,  that is used by a lot of taems in this league and makes it very easy to play in one team with robots from different teams. 
+So some years ago, a RoboCup Soccer Humanoid Kid Size team implemented a Wi-Fi communication standard, the so called MiteCom,  that is used by a lot of teams in this league and makes it very easy to play in one team with robots from different teams. 
 \\
-So our idea was, that every robot could provide its own gridworld and in return receive every other robots gridworlds. By weighting the incoming data due to reliability (like taking the median for each position of \textit{n} incoming grids) or currency ("I did not see a goal for a long time, i don' t know whether my own position is right or not, i will take a new grid and search for a goal") the average information quantity and quality could increase a lot.
+So our idea was, that every robot could provide its own grid world and in return receive every other robots grid worlds. By weighting the incoming data due to reliability (like taking the median for each position of \textit{n} incoming grids) or currency ("I did not see a goal for a long time, i don' t know whether my own position is right or not, i will take a new grid and search for a goal") the average information quantity and quality could increase a lot.
 \\
-But our a big problem was, that via MiteCom it is only possible to send 32 bit integer values. Foremost we thought about implementing our own standart, but when thinking about it a secound time, it seemed a good idea to use it. First of all, because of the aspect of universality mentioned above, that will be needed in the future. But forthermore it is not a bad idea to only send integers. 
+But our a big problem was, that via MiteCom it is only possible to send 32 bit integer values. Foremost we thought about implementing our own standard, but when thinking about it a second time, it seemed a good idea to use it. First of all, because of the aspect of universality mentioned above, that will be needed in the future. But furthermore it is not a bad idea to only send integers. 
 \\
-As already mentioned, on competitions the quality of WIFI is not very hight. So the big package loss could cause incompletely received data, and so only sending "small" 32bit integers is more practicable. 
+As already mentioned, on competitions the quality of WIFI is not very hight. So the big package loss could cause incompletely received data, and so only sending "small" 32 bit integers is more practicable. 
 \\
-The problem appeard, how to encode the dictonary, that represents the Grid World, into an integer.
+The problem appeared, how to encode the dictionary, that represents the grid world, into an integer.
 \\
-Our solution is based on binary numbering system. Each of the 32 positons represents one cell in the Grid World. But dividing the hole $54m^2$ field in only 32 cells seemed very few. So we decided to use eight integers, each representing one eighth of the field.
+Our solution is based on binary numbering system. Each of the 32 positions represents one cell in the Grid World. But dividing the hole $54m^2$ field in only 32 cells seemed very few. So we decided to use eight integers, each representing one eighth of the field.
 \\
-Besides, the binary integer can only depict one kind of information (numbers 1-7, see chaper Grid World) at a time. So we also need one integer per information type.
+Besides, the binary integer can only depict one kind of information (numbers 1-7, see chapter Grid World) at a time. So we also need one integer per information type.
 \\
-When calculating these integers, the current part of the grid is scanned for the certain kind of information. When a gridcell with the certain number is found, the grid cells number becomes the exponent of 2 and the sum of all of them gives the 32bit integer, that is sent via MiteCom.
+When calculating these integers, the current part of the grid is scanned for the certain kind of information. When a grid-cell with the certain number is found, the grid cells number becomes the exponent of 2 and the sum of all of them gives the 32 bit integer, that is sent via MiteCom.
 \\
 When receiving data and updating the own Grid World, there is a hierarchy of persistence between opponent robots, team mates and the own position. 
 \\
