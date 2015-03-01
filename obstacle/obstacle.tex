@@ -678,17 +678,29 @@ tbd
 
 \subsection{Filtering}
 \label{sec:results_filtering}
+Overall our customized DBSCAN algorithm with integrated arithmetical mean performed well when tested in a real world environment. The results (see ~\ref{fig:dbscan_plot1}) improved our data and finally enabled us to develop a localisation. Furthermore its results for non-moving objects like the goal posts were far better than the results of a simple linear regression tried at first.
+\\
+On the contrary the cost of computation time of DBSCAN is far higher than simpler methods, for example smoothing the data with an arithmetical mean only.
+\\
+In addition to that the DBSCAN algorithm is at the moment nearly useless when it comes to moving objects or obstacles, like a ball because of the camera only recording about 20 frames per second the DBSCAN algorithm nether has enough data sets of the object to filter it appropriately. For filtering moving objects with DBSCAN a much higher framerate and thus a faster processor is needed to produce acceptable results.
+\\
+For our work respectively for the darwin-op the conclusion is to not overuse DBSCAN and to use other filters for moving objects, especially for fast moving objects. The speed of robots is slow enough to filter those data via DBSCAN but the quality of results is not worth the computation time costs. Fast moving objects like balls should not be filtered with the DBSCAN.
+\\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot1.pdf}}
 	{\caption{Plot of our neural network output with calibrated vision data compared to the just DBSCAN-filtered data.}\label{fig:ann_plot1}}
 \end{figure}
-
-As shown in figure~\ref{fig:ann_plot1} the neural network easily calibrates the vision if sufficient training data is recorded. This renders manual calibration obsolete.
-\\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot2.pdf}}
 	{\caption{Plot of an overfitted neural network.}\label{fig:ann_plot2}}
 \end{figure}
+\\
+To further boost the filtering results and to avoid manual (camera, ...) calibration a neural network can be used.
+\\
+As shown in figure~\ref{fig:ann_plot1} our neural network easily calibrates the vision if sufficient training data is recorded. This renders manual calibration obsolete and saves time. In addition to this the standard deviation of DBSCAN and averaged data is less than 5mm for most of the time (and less 10mm in nearly all test scenarios) when objects are recorded in range of less or equal $2.5$m and the neural network improves this to a standard deviation of less than 3mm for those objects.
+\\
+Overall the neural network supplies an improvement of 25 to 50\% in accuracy for DBSCAN-filtered objects in range of less or equal $2.5$m. Unfortunately we did not manage to do a full comparison of DBSCAN and DBSCAN plus neural network data as this would have exceeded the 20 pages limit and especially the deadline of our paper but nevertheless in figure~\ref{fig:ann_plot1} at least the smaller sizes of the neural network clusters compared to the DBSCAN clusters can be perceived.
+\\
 \\
 Figure~\ref{fig:ann_plot2} demonstrates the output of an overfitted network.
 
