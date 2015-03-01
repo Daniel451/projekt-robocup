@@ -95,7 +95,7 @@ Intelligent behaviour requires a world model which provides its information in a
 \\
 Thus a form of swarm intelligence could increase the quality of the robots acting together as a whole team by increasing the quality of information.
 \\
-Playing football always requires communication, so sharing information improves the team's efficiency. Transfering this key aspect of football to the software was one of our main ambitions.
+Playing football always requires communication, so sharing information improves the team's efficiency. Transferring this key aspect of football to the software was one of our main ambitions.
 
 
 \subsection{Comments on group work \& split of labour}
@@ -152,7 +152,7 @@ Those aspects cause a big increase in making the robot football play more realis
 
 \subsection{Vision}
 \label{sec:problems_vision}
-For an intelligent obstacle recognition several sufficiently pre-processed data input is needed to localise the obstacle itself, localise the robot itself, classify the obstacle (ball, goal, teammate, enemy, other obstacle) and develop an adequate strategy of (re-)action.
+For an intelligent obstacle recognition several sufficiently pre-processed data input is needed to localise the obstacle itself, localise the robot itself, classify the obstacle (ball, goal, team-mate, enemy, other obstacle) and develop an adequate strategy of (re-)action.
 \\
 One of our first problems were the already implemented algorithm for obstacle detection and goal detection. We discovered that neither obstacles nor goals were tracked/recognized satisfactorily for our tasks.
 \\
@@ -164,7 +164,7 @@ In addition to that even when the real goal posts could be identified for severa
 \\
 The algorithm was designed to draw a rectangle over a possible goal post but it has no specific filters for the dimensions. This leads to rectangles having a wrong position, height and width compared to the original post. Some recorded datasets showed rectangles with twice or half the size of the real post and positional failures of several 10 centimetres.
 \\
-Appropriately reacting behaviour systems e.g. for intelligent obstacle recognition, localisation and further path planning or even postprocessing filters would fail on such raw data.
+Appropriately reacting behaviour systems e.g. for intelligent obstacle recognition, localisation and further path planning or even post-processing filters would fail on such raw data.
 
 
 \subsection{Filtering}
@@ -173,11 +173,11 @@ The whole topic of obstacle recognition relies on information which is extracted
 \\
 For our solutions primarily the goal post data and the later calculated goal centre information is important to calculate real, absolute coordinates for localisation purposes on the field out of the relative camera input.
 \\
-The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) oftenly showed a spreaded distribution of points in a circle with a radius of about a quarter of a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and higher.
+The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) often showed a spread distribution of points in a circle with a radius of about a quarter of a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and higher.
 \\
 Having such noisy data renders absolute positioning tasks and intelligent obstacle recognition (avoidance in case of real obstacles, path planning in case of balls) impossible.
 \\
-Since the robots do not have auto-calibration features the calibration of the camera and motor angles deteriorate the noise problem. Once the calibration is manually done its configuration is static but the real values vary other time, for example when the robot falls accidently.
+Since the robots do not have auto-calibration features the calibration of the camera and motor angles deteriorate the noise problem. Once the calibration is manually done its configuration is static but the real values vary other time, for example when the robot falls accidentally.
 \\
 In addition to that the manual calibration is expansive in terms of time.
 
@@ -696,13 +696,13 @@ tbd
 
 \subsection{Localisation}
 \label{sec:results_localisation}
-Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Or one could coordinate which player should go to the goal depending on who has the shortest path. And there's a lot more potential for usages.
+Our localisation is able to compute the position of our own robots and furthermore the location of opponents. Unfortunately we didn't have enough time to implement this information into the behaviour. But there are several possibilities to use the data to our advantage. In the grid world module there is already a simple path finder implemented, that uses the A* search algorithm and avoids the occupied cells in the grid world. Another possible usage could be to coordinate which player should go to the ball depending on who has the shortest path. And there's a lot more potential to benefit from the grid world.
+\\
+We also implemented a solution that computes the position of our robot with vectors instead of angles. But this was towards the end of our project so we didn't have enough time to explain it in this paper.
 \\
 Unfortunately we didn't have enough time to conduct our tests of the grid world to the end. So there are still some bugs. 
 \\
-Towards the end of our project we implemented a solution that computes the position of our robot with vectors instead of angles.
-\\
-Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to benefit from it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
+Also the tests were only successful when the robot had good sight of the goal. In the code there is actually a line detection but we found out to late about it and there was no time left to improve our localisation with it. Another aspect that needs to be implemented is to figure out a way for the robot to know which goal it is looking at.
 \\
 So there is still a lot of room for improvements, but this was something we expected at the start of the project. It's unfortunate that there wasn't more time to test our localisation and fix the rest of the bugs, but apart from this we are satisfied with the resulting localisation.
 
@@ -715,7 +715,7 @@ Something that needs to developed in further work is the question of data integr
 \\
 One idea to avoid this to happen might be, to have a minimum and maximum amount of team mates and opponents and a rating for each of them. When there are too many, only the best ones are taken and only the worst one can be deleted.
 \\
-In general it should be thought about an algorithms that take the last \textit{n} received grid worlds and weights them before the own grid world is updated.  Depending on the quality of WIFI (the last \textit{n} grid worlds, but not older then \textit{m} seconds), the information could be averaged or even more filtered (like taking the median). 
+In general it should be thought about an algorithms that take the last \textit{n} received grid worlds and weights them before the own grid world is updated.  Depending on the quality of Wi-Fi (the last \textit{n} grid worlds, but not older then \textit{m} seconds), the information could be averaged or even more filtered (like taking the median). 
 \\
 Or the robots could use an internal rating system for the incoming data. One heuristic might depend on prioritising the goalie, as it often stands still, has a good view over the field and does not move too much. This makes his information more reliable then the other robots information. 
 \\
