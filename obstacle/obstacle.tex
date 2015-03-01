@@ -83,13 +83,13 @@ The communication uses the mitecom standard.
 
 \section{Introduction}
 
-In this project our aim was to implement obstacle recognition for a team of robots taking part in the RoboCup Soccer Humanoid Kid Size League. So far each robot in the team made decisions due to its own information only such as the field of vision. This led to a decision making being dependent on one robot's limited individual data.
+In this project our aim was to implement obstacle recognition for a team of robots taking part in the RoboCup Soccer Humanoid Kid Size League. So far each robot in the team made decisions dependent on its own information only such as the field of vision. This led to a decision making being dependent on one robot's limited individual data.
 \\
-Our objective was to develop modules which share data not only on one robot but between all team mates for realizing an intelligent behaviour via localisation and mapping obstacles in this world model.
+Our objective was to develop modules which share data between all team mates for realizing an intelligent behaviour via localisation and mapping obstacles in this world model.
 \\
 For implementing such modules it is required to have sufficient vision data of the environment. Gathering this information we noticed that the supplied quality does not match this task's demands.
 \\
-Furthermore the position data of the robot and other objects were noisy, so data filtering was necessary.
+Furthermore the position data of the robot and other objects data was noisy, so data filtering was necessary.
 \\
 Intelligent behaviour requires a world model which provides its information in a transformable and unique way between modules or even robots. Fulfilment of this task requires an internal team communication system contributing one robot's information for every team member.
 \\
@@ -99,15 +99,15 @@ Playing football always requires communication, so sharing information improves 
 
 
 \subsection{Comments on group work \& split of labour}
-In this project we had a good cooperation and team work. Thus the results can not completely be split and allocated to a single person. We worked together as one team on most topics. Still we reflected our process and name the main persons for each part.
+In this project we had a good cooperation, team work and several team discussions. Thus the results can not completely be split and allocated to a single person. We worked together as one team on most topics. Still we reflected our process and name the main persons for each part.
 \\
-Thus it appeared that the subjects "Vision" and "Filtering" primarily were done by Daniel Speck. It was his idea and together with Benjamin Scholz and Judith Hartfill he created a concept. The implementation on those topics was done by Daniel Speck.
+Thus it appeared that the subjects "Vision" and "Filtering" primarily were done by Daniel Speck. He had the ideas and developed the approaches of our fixed vision and our filtering via DBSCAN and neural networks. Then the team discussed the plans and together with Benjamin Scholz and Judith Hartfill, Daniel Speck created a concept. The implementation on those topics was done by Daniel Speck.
 \\
-Looking at the "Localisation" and "Communication" chapter, such a strict seperation is not possible anymore. Most of these two topics was done by Benjamin Scholz and Judith Hartfill.
+Looking at the "Localisation" and "Communication" chapter, such a strict seperation is not possible anymore. Most of these two topics were done by Benjamin Scholz and Judith Hartfill together.
 \\
-The idea to create a Gridworld came from Daniel Speck, but the concept and the implementation was done by Benjamin Scholz and Judith Hartfill.
+The idea to create a Gridworld came from Daniel Speck at another team discussion, but the concept and the implementation was done by Benjamin Scholz and Judith Hartfill.
 \\
-The idea for the communication part came from Judith Hartfill. The concept and implementation of it was done by Judith Hartfill and Benjamin Scholz. 
+The idea for the communication part came from Judith Hartfill. The concept and implementation of it was done by Judith Hartfill and Benjamin Scholz.
 \\
 The testing and debugging for each of the topics was done jointly by all of us.
 \\
@@ -148,7 +148,6 @@ Those aspects cause a big increase in making the robot football play more realis
 %%%%%%%%%%%%%%%%
 
 \section{Problems}
- and due to the limited computing power of our robots it is not recommended to overuse DBSCAN or the neural network.
 
 \subsection{Vision}
 \label{sec:problems_vision}
@@ -715,6 +714,10 @@ In contrary to the DBSCAN the neural network can also learn to filter and calibr
 Moreover the neural network needs a vast amount of training data to deliver accurate filtered and calibrated data. This can also be a time intensive task as collecting the training data takes quite some time.
 \\
 Conclusive the DBSCAN algorithm can be used for filtering goal information without issues. The neural network should only be used if sufficient training data was supplied. Additionally new training data has to be recorded over time because when the hardware changes the calibration error changes, too.
+\\
+Furthermore the future improvements in the hardware could enable us to make new and bigger neural network designs due to the faster processors. For moving objects recurrent neural networks would improve the precision. According to the non-moving objects deep-learning networks could potentially improve the accuracy.
+\\
+The DBSCAN would most likely profit from a new camera and more frames per second.
 
 
 \subsection{Localisation}
