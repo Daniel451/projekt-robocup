@@ -364,11 +364,27 @@ In addition to this the whole data (weights, bias, activations, outputs, ...) is
 Furthermore the neural network is designed dynamically. All configurations are variably. At the moment our network has an input layer with 2 neurons, 2 hidden layers with 10 and 5 neurons and an output layer with 2 output neurons. The learning rate $\epsilon$ is $0.2$ with $20,000$ learning steps and $1,000$ training data sets.
 \\
 All this configurations can be changed instantly, for example a list of integers $[10, 5]$ represents the hidden layers at the moment and can be changed to $[20, 10, 5]$ which would create a net with 3 hidden layers with 20, 10 and 5 neurons per layer.
-
+\\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{neuralnet1.pdf}}
-	{\caption{Plot of our Artificial Neural Network design (multi-layer perceptron).}\label{fig:neuralnet_illustration1}}
+	{\caption{Illustration of our Artificial Neural Network design (multi-layer perceptron).}\label{fig:ann_illustration1}}
 \end{figure}
+\\
+In figure~\ref{fig:ann_illustration1} our multi-layer perceptron design is illustrated.
+\\
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot1.pdf}}
+	{\caption{Plot of our neural network output with calibrated vision data compared to the just DBSCAN-filtered data.}\label{fig:ann_plot1}}
+\end{figure}
+\\
+As shown in figure~\ref{fig:ann_plot1} the neural network easily calibrates the vision if sufficient training data is recorded. This renders manual calibration obsolete.
+\\
+\begin{figure}
+ 	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot2.pdf}}
+	{\caption{Plot of an overfitted neural network.}\label{fig:ann_plot2}}
+\end{figure}
+\\
+Figure~\ref{fig:ann_plot2} demonstrates the output of an overfitted network.
 
 
 
