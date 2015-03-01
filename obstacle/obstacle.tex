@@ -153,9 +153,9 @@ Those aspects cause a big increase in making the robot football play more realis
 \label{sec:problems_vision}
 For an intelligent obstacle recognition several sufficiently pre-processed data input is needed to localise the obstacle itself, localise the robot itself, classify the obstacle (ball, goal, team-mate, enemy, other obstacle) and develop an adequate strategy of (re-)action.
 \\
-One of our first problems were the already implemented algorithm for obstacle detection and goal detection. We discovered that neither obstacles nor goals were tracked/recognized satisfactorily for our tasks.
+One of our first problems was the already implemented algorithm for obstacle and goal detection. We discovered that neither obstacles nor goals were tracked/recognized satisfactorily for our tasks.
 \\
-The obstacle detection was too imprecisely to fulfil our plans of an intelligent reaction and the biggest problem was the missing localisation of the robot itself which is realized by tracking the goals (via tracking the two goal posts). Even when the robot stands still completely in a distance of two metres directly in front of the goal the vision detects four to six goal posts most of the time.
+The obstacle detection was too imprecise to fulfil our plans of an intelligent reaction and the biggest problem was the missing localisation of the robot itself which is realized by tracking the goals (via tracking the two goal posts). Even when the robot stands completely still in a distance of two metres directly in front of the goal the vision detects four to six goal posts most of the time.
 \\
 The majority of false positives were shadows of the real posts or random mirages/reflections on the walls. This resulted in "jumping" goal posts because for the behaviour two posts are selected and out of the four to six possible posts the selection process to distinguish between the possibilities was not stable.
 \\
@@ -168,15 +168,15 @@ Appropriately reacting behaviour systems e.g. for intelligent obstacle recogniti
 
 \subsection{Filtering}
 \label{sec:problems_filtering}
-The whole topic of obstacle recognition relies on information which is extracted out of (heavily) noisy input data.
+The whole topic of obstacle recognition relies on information which is extracted from (heavily) noisy input data.
 \\
 For our solutions primarily the goal post data and the later calculated goal centre information is important to calculate real, absolute coordinates for localisation purposes on the field out of the relative camera input.
 \\
-The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) often showed a spread distribution of points in a circle with a radius of about a quarter of a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and higher.
+The raw data of goal posts (relative tuples of $x, y$ coordinates) when recorded over several seconds (with a still standing robot) often showed a spread distribution of points in a circle with a radius of about a quarter of a metre. Those datasets of 100 to 200 recorded samples had a standard deviation of 200 millimetres and above.
 \\
 Having such noisy data renders absolute positioning tasks and intelligent obstacle recognition (avoidance in case of real obstacles, path planning in case of balls) impossible.
 \\
-Since the robots do not have auto-calibration features the calibration of the camera and motor angles deteriorate the noise problem. Once the calibration is manually done its configuration is static but the real values vary other time, for example when the robot falls accidentally.
+Since the robots do not have auto-calibration features the calibration of the camera and motor angles deteriorate the noise problem. Once the calibration is manually done its configuration is static but the real values vary over time, for example when the robot falls by accident.
 \\
 In addition to that the manual calibration is expansive in terms of time.
 
@@ -225,18 +225,18 @@ But to use the whole capability of communication, shared information and thus in
 
 \subsection{Vision}
 \label{sec:solutions_vision}
-The visions detection of obstacles and objects is based on a horizon scanning algorithm which tries to find the horizon in the current frame. Basically it reads the pixel information of the current frame in matrix and finds the specific row where the horizon is located.
+The vision's detection of obstacles and objects is based on a horizon scanning algorithm which tries to find the horizon in the current frame. Basically it reads the pixel information of the current frame in matrix and finds the specific row where the horizon is located.
 Once this row is found the algorithm for obstacle detection scans down to find "green" pixels for locating the field. Every obstacle, for example the goal posts, create non-green shapes in this matrix.
 
 
 \subsubsection{Goal information}
 The algorithm searches for the yellow colour mask of the goal posts to detect every goal post in the current frame. For every potential goal post which is found the algorithm tries to extrapolate the shape of the goal post and to fit a virtual rectangle with nearly the same dimensions on it.
 \\
-Often the width of the rectangle was calculated wrong (being twice or half as big as the original post). This failure exists because of image distortions which manipulate the objects shapes and the angle under which the object is seen (basically the bottom of the object is wider, the top thinner because of the angle).
+Often the width of the rectangle was calculated wrong (being twice or half as big as the original post). This failure exists because of image distortions which manipulate the object's shapes and the angle at which the object is seen (basically the bottom of the object is wider, the top thinner because of the angle).
 \\
 This problem basically remains but with modified parameters we were able to make the fitting of the virtual rectangle more strict. Those changes slightly improved the rectangle width compared to the real goal post.
 \\
-In addition to that the implemented algorithm now searches the bottom of the object by scanning down to one of the objects last lines in the matrix. This solution relatively stabilizes the problem because the previous algorithm just picked some line of the top of the object compared to the horizon line in the current frame and those information varies much more (top \& horizon line) in dependency of the camera angle compared to the objects bottom.
+In addition to that the implemented algorithm now searches the bottom of the object by scanning down to one of the objects last lines in the matrix. This solution relatively stabilizes the problem because the previous algorithm just picked some line of the top of the object compared to the horizon line in the current frame and those information varies much more (top \& horizon line) in dependency of the camera angle compared to the objects bottom (green and non-green contrast on the field).
 \\
 Scanning for the bottom of the object is even more profitable when it comes to the height of the object because the bottom of a goal post (yellow) and the field (green or white) always have a hight contrast change so the bottom line is found reliably.
 \\
@@ -250,7 +250,7 @@ Objects like the ball are filtered by another algorithm. A point cloud filtering
 \\
 Arbitrary coloured obstacles with a significant size are classified as miscellaneous obstacles. Those obstacles are "real" obstacles which should be avoided (in case of a human on the field or an enemy robot) or blocked (in case of an enemy with the ball trying to score at our goal).
 \\
-Those obstacles information is processed separately and can be filtered to stabilize its data / position. Those data is later mapped into our grid world model.
+This obstacle information is processed separately and can be filtered to stabilize its data / position. This data is later mapped into our grid world model.
 
 
 
@@ -296,7 +296,7 @@ $\vec{d_{1}} := \left( \begin{array}{cc} 1797 & -25 \end{array} \right)^{T}$ and
 $\vec{d_{2}} := \left( \begin{array}{cc} 1877 & 107 \end{array} \right)^{T}$
 are the vectors of two recorded points shown in figure~\ref{fig:noise1}.
 \\
-The euclidean distance $ed$ between two vectors $\vec{a}, \vec{b}$ is calculated by:
+The euclidean distance $ed$ between two vectors $\vec{a}, \vec{b}$ is calculated by equation~\ref{equ:euclidean_distance}:
 \\
 \begin{equation}
 \label{equ:euclidean_distance}
