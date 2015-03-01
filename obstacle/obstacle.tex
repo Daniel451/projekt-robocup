@@ -394,7 +394,7 @@ All this configurations can be changed instantly, for example a list of integers
 	{\caption{Illustration of our Artificial Neural Network design (multilayer perceptron).}\label{fig:ann_illustration1}}
 \end{figure}
 \\
-In figure~\ref{fig:ann_illustration1} our multilayer perceptron design is illustrated. Overall it follows the standard MLP design \cite{mlp}. Each layer is fully connected to the parents layer, as a transfer function we use hyperbolic tangent (tanh) as well as its derivation for learning which is realized via supervised learning with backpropagation.
+In figure~\ref{fig:ann_illustration1} our multilayer perceptron design is illustrated. Overall it follows the standard MLP design \cite{mlp}. Each layer is fully connected to the parents layer, as a transfer function we use hyperbolic tangent ($tanh$) as well as its derivation for learning which is realized via supervised learning with backpropagation.
 \\
 In contrast to the standard feedforward activation we implemented custom version. The standard feedforward activation:
 \\
@@ -414,7 +414,27 @@ The neuron output then simply is the activation corrected by the transfer functi
 s_{i}^{\lambda} (h_{i}^{\lambda}) = tanh(h_{i}^{\lambda})
 \end{equation}
 \\
-Testing equation~\ref{equ:mlp_feedforward_standard} for our neural network showed that the learning process takes a vast amount of time and steps. This is because of the non-linear transfer function $tanh$ which is used to normalize 
+Testing equation~\ref{equ:mlp_feedforward_standard} for our neural network showed that the learning process takes a vast amount of time and steps.
+\\
+This happens because of the non-linear transfer function $tanh$ which is used to normalize the neuron's activation and our network design having 10 and 5 neurons in the hidden layers. The limes $\lim\limits_{x \to \infty} tanh(x)$ is 1 and because of the fully connected layers (see figure~\ref{fig:ann_illustration1}) and randomly initialized weights the activation of one single neuron (which is the sum of the output of each parent layers neuron multiplied with the weights plus its bias (see equation~\ref{equ:mlp_feedforward_standard}) can be far higher than 1 so that the hyperbolic tangent returns 1 for a long period of time.
+\\
+Considering this problem, the output of the hidden layers are near 1 for several hundreds, sometimes thousands of learning steps.
+\\
+To fix this problem, we simply customized the activation function. Instead of adding all incoming activations we took the average activation of the parent layer, so the activation for each neuron always is in the interval of $[-1.0, 1.0]$:
+\\
+\begin{equation}
+\label{equ:mlp_feedforward_custom}
+h_{i}^{\lambda} (\vec{w}_{i}^{\lambda \lambda-1})
+=
+\frac{
+\sum\limits_{j} w_{ij}^{\lambda \lambda-1} s_{j}^{\lambda-1} + b_{i}^{\lambda}
+}
+{\eta^{\lambda-1}}
+\end{equation}
+\\
+In our custom equation (\ref{equ:mlp_feedforward_custom}) the $\eta^{\lambda-1}$ is the number of neurons in the parent layer $\lambda-1$. Dividing the activation by $\eta^{\lambda-1}$ ensures the whole activation of neuron $i$ to be in the interval of $[-1.0, 1.0]$ as mentioned.
+\\
+This method greatly reduced the needed learning time and steps of our network. The saved amount of time and steps increases with larger nets because the overall higher activation without this normalization would cause the hyperbolic tangent function to map the values nearly 1 for a longer time.
 \\
 \begin{figure}
  	\centerline{\includegraphics[width=0.7\textwidth]{ann_plot1.pdf}}
